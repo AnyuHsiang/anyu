@@ -131,13 +131,13 @@ endif; // anyutv_setup
 add_action( 'after_setup_theme', 'anyutv_setup' );
 
 /**
- * Register widget area.
+ * Register widget area.注册侧小工具
  *
  * @link http://codex.wordpress.org/Function_Reference/register_sidebar
  */
 function anyutv_widgets_init() {
 	register_sidebar( array(
-		'name'          => esc_html__( 'Sidebar', 'anyutv' ),
+		'name'          => esc_html__( '侧边栏', 'anyutv' ),
 		'id'            => 'sidebar-1',
 		'description'   => '',
 		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
@@ -146,7 +146,7 @@ function anyutv_widgets_init() {
 		'after_title'   => '</h4>',
 	) );
 	register_sidebar( array(
-		'name'          => esc_html__( 'Footer Sidebar Left', 'anyutv' ),
+		'name'          => esc_html__( '底栏左侧小工具', 'anyutv' ),
 		'id'            => 'footer-sidebar-1',
 		'description'   => '',
 		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
@@ -155,7 +155,7 @@ function anyutv_widgets_init() {
 		'after_title'   => '</h4>',
 	) );
 	register_sidebar( array(
-		'name'          => esc_html__( 'Footer Sidebar Midlle', 'anyutv' ),
+		'name'          => esc_html__( '底栏中间小工具', 'anyutv' ),
 		'id'            => 'footer-sidebar-2',
 		'description'   => '',
 		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
@@ -164,7 +164,7 @@ function anyutv_widgets_init() {
 		'after_title'   => '</h4>',
 	) );
 	register_sidebar( array(
-		'name'          => esc_html__( 'Footer Sidebar Right', 'anyutv' ),
+		'name'          => esc_html__( '底栏右侧小工具', 'anyutv' ),
 		'id'            => 'footer-sidebar-3',
 		'description'   => '',
 		'before_widget' => '<aside id="%1$s" class="widget %2$s">',

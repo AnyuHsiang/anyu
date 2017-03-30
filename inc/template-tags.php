@@ -8,7 +8,7 @@
  */
 
 /**
- * Show post author
+ * Show post author显示作者
  */
 function anyutv_post_author() {
 	$author = sprintf(
@@ -54,7 +54,7 @@ function anyutv_post_comments() {
 	}
 
 	echo '<span class="entry-meta-item comments"><i class="fa fa-pencil-square-o"></i> ';
-	comments_popup_link( esc_html__( 'Leave a comment', 'anyutv' ), esc_html__( '1 Comment', 'anyutv' ), esc_html__( '% Comments', 'anyutv' ) );
+	comments_popup_link( esc_html__( '评论本文', 'anyutv' ), esc_html__( '1 Comment', 'anyutv' ), esc_html__( '% Comments', 'anyutv' ) );
 	echo '</span>';
 
 }

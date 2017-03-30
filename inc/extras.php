@@ -32,10 +32,6 @@ function anyutv_allowed_socials() {
 	return apply_filters(
 		'anyutv_allowed_socials',
 		array(
-			'facebook' => array(
-				'label'   => __( 'Facebook', 'anyutv' ),
-				'icon'    => 'fa fa-facebook',
-				'default' => 'https://www.facebook.com/'
 			'phone' => array(
 				'label'   => __( 'phone', 'anyutv' ),
 				'icon'    => 'fa fa-phone',

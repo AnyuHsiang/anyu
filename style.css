@@ -1209,29 +1209,29 @@ button.menu-toggle {
     text-align: center; }
     .custom-box-follow-item > a:hover, .custom-box-follow-item > a:active, .custom-box-follow-item > a:focus, .custom-box-follow-item > a:visited {
       color: #fff; }
-    .custom-box-follow-item > a.item-facebook {
+    .custom-box-follow-item > a.item-phone {
       background: #3b5998; }
-      .custom-box-follow-item > a.item-facebook:hover {
+      .custom-box-follow-item > a.item-phone:hover {
         background: #2d4373; }
-    .custom-box-follow-item > a.item-twitter {
+    .custom-box-follow-item > a.item-github {
       background: #00aced; }
-      .custom-box-follow-item > a.item-twitter:hover {
+      .custom-box-follow-item > a.item-github:hover {
         background: #0087ba; }
-    .custom-box-follow-item > a.item-weibo-plus {
+    .custom-box-follow-item > a.item-weibo {
       background: #dd4b39; }
-      .custom-box-follow-item > a.item-weibo-plus:hover {
+      .custom-box-follow-item > a.item-weibo:hover {
         background: #c23321; }
-    .custom-box-follow-item > a.item-instagram {
+    .custom-box-follow-item > a.item-qq {
       background: #517fa4; }
-      .custom-box-follow-item > a.item-instagram:hover {
+      .custom-box-follow-item > a.item-qq:hover {
         background: #406582; }
-    .custom-box-follow-item > a.item-pinterest {
+    .custom-box-follow-item > a.item-weixin {
       background: #cb2027; }
-      .custom-box-follow-item > a.item-pinterest:hover {
+      .custom-box-follow-item > a.item-weixin:hover {
         background: #9f191f; }
-    .custom-box-follow-item > a.item-dribbble {
+    .custom-box-follow-item > a.item-envelope {
       background: #ea4c89; }
-      .custom-box-follow-item > a.item-dribbble:hover {
+      .custom-box-follow-item > a.item-envelope:hover {
         background: #e51e6b; }
 
 /*--------------------------------------------------------------

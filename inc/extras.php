@@ -36,30 +36,34 @@ function anyutv_allowed_socials() {
 				'label'   => __( 'Facebook', 'anyutv' ),
 				'icon'    => 'fa fa-facebook',
 				'default' => 'https://www.facebook.com/'
+			'phone' => array(
+				'label'   => __( 'phone', 'anyutv' ),
+				'icon'    => 'fa fa-phone',
+				'default' => 'https://www.facebook.com/anyuhsiang'
 			),
-			'twitter' => array(
-				'label'   => __( 'Twitter', 'anyutv' ),
-				'icon'    => 'fa fa-twitter',
-				'default' => 'https://twitter.com/'
+			'github' => array(
+				'label'   => __( 'github', 'anyutv' ),
+				'icon'    => 'fa fa-github',
+				'default' => 'https://github.com/AnyuHsiang'
 			),
-			'google-plus' => array(
+			'weibo' => array(
 				'label'   => __( 'weibo', 'anyutv' ),
-				'icon'    => 'fa fa-weibo-plus',
-				'default' => 'https://weibo.com/'
+				'icon'    => 'fa fa-weibo',
+				'default' => 'https://weibo.com/uaskme'
 			),
-			'instagram' => array(
-				'label'   => __( 'Instagram', 'anyutv' ),
-				'icon'    => 'fa fa-instagram',
+			'qq' => array(
+				'label'   => __( 'QQ', 'anyutv' ),
+				'icon'    => 'fa fa-qq',
 				'default' => 'https://instagram.com/'
 			),
-			'pinterest' => array(
-				'label'   => __( 'Pinterest', 'anyutv' ),
-				'icon'    => 'fa fa-pinterest',
+			'weixin' => array(
+				'label'   => __( 'weixin', 'anyutv' ),
+				'icon'    => 'fa fa-weixin',
 				'default' => 'https://www.pinterest.com/'
 			),
-			'dribbble' => array(
-				'label'   => __( 'Dribbble', 'anyutv' ),
-				'icon'    => 'fa fa-dribbble',
+			'envelope' => array(
+				'label'   => __( 'envelope', 'anyutv' ),
+				'icon'    => 'fa fa-envelope',
 				'default' => 'https://dribbble.com/'
 			)
 		)

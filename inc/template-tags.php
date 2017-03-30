@@ -8,9 +8,8 @@
  */
 
 /**
- * Show post author显示作者
- */
-function anyutv_post_author() {
+ * Show post author显示作者，因本博客只有自己更新，暂时注释掉作者的显示
+ function anyutv_post_author() {
 	$author = sprintf(
 		'<span class="author vcard"><a class="url fn n" href="%1$s">%2$s</a></span>',
 		esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
@@ -19,6 +18,7 @@ function anyutv_post_author() {
 
 	echo '<span class="entry-meta-item author"><i class="fa fa-user"></i> ' . $author . '</span>';
 }
+*/
 
 /**
  * Prints HTML with meta information for the current post-date.

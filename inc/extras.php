@@ -35,7 +35,7 @@ function anyutv_allowed_socials() {
 			'phone' => array(
 				'label'   => __( 'phone', 'anyutv' ),
 				'icon'    => 'fa fa-phone',
-				'default' => 'https://www.facebook.com/anyuhsiang'
+				'default' => 'tel:18995885887'
 			),
 			'github' => array(
 				'label'   => __( 'github', 'anyutv' ),
@@ -50,17 +50,17 @@ function anyutv_allowed_socials() {
 			'qq' => array(
 				'label'   => __( 'QQ', 'anyutv' ),
 				'icon'    => 'fa fa-qq',
-				'default' => 'https://instagram.com/'
+				'default' => 'http://wpa.qq.com/msgrd?v=3&uin=550005887&site=qq&menu=yes'
 			),
 			'weixin' => array(
 				'label'   => __( 'weixin', 'anyutv' ),
 				'icon'    => 'fa fa-weixin',
-				'default' => 'https://www.pinterest.com/'
+				'default' => 'https://anyu.tv/wp-content/uploads/2017/03/weixinhao.png'
 			),
-			'envelope' => array(
-				'label'   => __( 'envelope', 'anyutv' ),
+			'mail' => array(
+				'label'   => __( 'mail', 'anyutv' ),
 				'icon'    => 'fa fa-envelope',
-				'default' => 'https://dribbble.com/'
+				'default' => 'http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=07K9qqanpZOiov2wvL4'
 			)
 		)
 	);

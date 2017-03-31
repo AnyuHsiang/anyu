@@ -49,12 +49,3 @@
 
 	<div id="content" class="site-content">
 		<div class="container">
-
-<!-- #折叠收缩js -->
-<script type="text/javascript">  
-    jQuery(document).ready(function(jQuery) {  
-        jQuery('.collapseButton').click(function() {  
-            jQuery(this).parent().parent().find('.xContent').slideToggle('slow');  
-        });  
-    });  
-</script>  

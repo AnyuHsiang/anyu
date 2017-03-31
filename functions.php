@@ -209,8 +209,8 @@ function anyutv_assets() {
 add_action( 'wp_enqueue_scripts', 'anyutv_assets' );
 
 /**
- * Get necessary Google fonts URL
- */
+ * Get necessary Google fonts URL暂时注释掉
+*/
 function anyutv_fonts_url() {
 
 	$fonts_url = '';
@@ -267,6 +267,7 @@ function anyutv_fonts_url() {
 
 	return $fonts_url;
 }
+
 
 /**
  * Get theme option by name
@@ -414,3 +415,65 @@ add_shortcode('collapse', 'xcollapse');
 }
 
 add_action('admin_print_footer_scripts', 'appthemes_add_quicktags' );
+
+// 禁止WordPress头部加载s.w.org
+	function remove_dns_prefetch( $hints, $relation_type ) {
+	if ( 'dns-prefetch' === $relation_type ) {
+	return array_diff( wp_dependencies_unique_hosts(), $hints );
+	}
+	return $hints;
+	}
+
+	add_filter( 'wp_resource_hints', 'remove_dns_prefetch', 10, 2 );
+
+// 移除后台 Google Font API
+	function remove_open_sans_from_wp_core() {
+	    wp_deregister_style('open-sans');
+	    wp_register_style('open-sans', FALSE);
+	    wp_enqueue_style('open-sans', '');
+	}
+
+	add_action('init', 'remove_open_sans_from_wp_core');
+
+
+// 禁用 emoji's表情
+	     function disable_emojis() {
+		     remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+		     remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+		     remove_action( 'wp_print_styles', 'print_emoji_styles' );
+		     remove_action( 'admin_print_styles', 'print_emoji_styles' );
+		     remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
+		     remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
+		     remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
+		     add_filter( 'tiny_mce_plugins', 'disable_emojis_tinymce' );
+	     }
+	     add_action( 'init', 'disable_emojis' );
+		 
+		
+		 	add_filter('get_avatar', 'mimelove_get_ssl_avatar');
+			
+
+// 去除emojis wpemoji插件
+	function disable_emojis_tinymce( $plugins ) {
+		if ( is_array( $plugins ) ) {
+			return array_diff( $plugins, array( 'wpemoji' ) );
+		} else {
+			return array();
+		}
+	}
+	
+//禁用REST API/移除wp-json链接
+	    add_filter('rest_enabled', '__return_false');
+	    add_filter('rest_jsonp_enabled', '__return_false');
+	    remove_action( 'wp_head', 'rest_output_link_wp_head', 10 );
+	    remove_action( 'wp_head', 'wp_oembed_add_discovery_links', 10 );
+		
+//替换Gravatar头像库
+	function mimelove_get_ssl_avatar($avatar) {
+		$avatar = str_replace(array("www.gravatar.com", "0.gravatar.com", "1.gravatar.com", "2.gravatar.com"), "secure.gravatar.com", $avatar);
+		return $avatar;
+	}
+	add_filter('get_avatar', 'mimelove_get_ssl_avatar');
+	
+//禁用xmlrpc离线发布协议
+add_filter('xmlrpc_enabled', '__return_false');

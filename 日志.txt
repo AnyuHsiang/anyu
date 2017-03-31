@@ -1,0 +1,16 @@
+3月31
+
+1、 follow box 的 css 样式，宽度从45px改为 44 px；
+	此处非自适应，改小一个像素是为了手机端浏览时候不换行，但是窄屏手机可能还是会存在兼容问题。
+
+2、functions.php修改，主要是优化访问速度。
+// 去除emojis wpemoji插件	
+// 禁用 emoji's表情
+//禁用REST API/移除wp-json链接
+//替换Gravatar头像库
+// 移除后台 Google Font API
+// 禁止WordPress头部加载s.w.org
+
+3、更改wp-includes文件夹下script-loader.php中的代码fonts.googleapis.com为fonts.useso.com
+
+4、修改了extras文件，临时使用各类联系方式的链接地址，后期再来改进，计划还是改回follow me

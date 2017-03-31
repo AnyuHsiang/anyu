@@ -1199,7 +1199,7 @@ button.menu-toggle {
   margin: 0 1px 1px 0; }
   .custom-box-follow-item > a {
     display: block;
-    width: 45px;
+    width: 44px;
     height: 45px;
     line-height: 45px;
     font-size: 26px;
@@ -1229,9 +1229,9 @@ button.menu-toggle {
       background: #cb2027; }
       .custom-box-follow-item > a.item-weixin:hover {
         background: #9f191f; }
-    .custom-box-follow-item > a.item-envelope {
+    .custom-box-follow-item > a.item-mail {
       background: #ea4c89; }
-      .custom-box-follow-item > a.item-envelope:hover {
+      .custom-box-follow-item > a.item-mail:hover {
         background: #e51e6b; }
 
 /*--------------------------------------------------------------

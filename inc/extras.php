@@ -47,16 +47,16 @@ function anyutv_allowed_socials() {
 				'icon'    => 'fa fa-weibo',
 				'default' => 'https://weibo.com/uaskme'
 			),
-			'qq' => array(
-				'label'   => __( 'QQ', 'anyutv' ),
-				'icon'    => 'fa fa-qq',
-				'default' => 'http://wpa.qq.com/msgrd?v=3&uin=550005887&site=qq&menu=yes'
+			'qrcode' => array(
+				'label'   => __( 'qrcode', 'anyutv' ),
+				'icon'    => 'fa fa-qrcode',
+				'default' => ' https://anyu.tv/qrcode'
 			),
-			'weixin' => array(
-				'label'   => __( 'weixin', 'anyutv' ),
-				'icon'    => 'fa fa-weixin',
-				'default' => 'https://anyu.tv/wp-content/uploads/2017/03/weixinhao.png'
-			),
+			'website' => array(
+				'label'   => __( 'website', 'anyutv' ),
+				'icon'    => 'fa fa-link',
+				'default' => 'https://flytofilm.com'
+			),	
 			'mail' => array(
 				'label'   => __( 'mail', 'anyutv' ),
 				'icon'    => 'fa fa-envelope',

@@ -1221,13 +1221,13 @@ button.menu-toggle {
       background: #dd4b39; }
       .custom-box-follow-item > a.item-weibo:hover {
         background: #c23321; }
-    .custom-box-follow-item > a.item-qq {
+    .custom-box-follow-item > a.item-qrcode {
       background: #517fa4; }
-      .custom-box-follow-item > a.item-qq:hover {
+      .custom-box-follow-item > a.item-qrcode:hover {
         background: #406582; }
-    .custom-box-follow-item > a.item-weixin {
+    .custom-box-follow-item > a.item-website {
       background: #cb2027; }
-      .custom-box-follow-item > a.item-weixin:hover {
+      .custom-box-follow-item > a.item-website:hover {
         background: #9f191f; }
     .custom-box-follow-item > a.item-mail {
       background: #ea4c89; }

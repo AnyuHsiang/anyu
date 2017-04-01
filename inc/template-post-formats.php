@@ -30,8 +30,9 @@ function anyutv_post_image() {
 	// Check if post has featured image
 	if ( has_post_thumbnail( $post_id ) ) {
 
-		$thumb = get_the_post_thumbnail( $post_id, 'post-thumbnail', array( 'alt' => get_the_title( $post_id ) ) );
-		$url   = wp_get_attachment_url( get_post_thumbnail_id( $post_id ) );
+		$thumb_id = get_post_thumbnail_id( $post_id );
+		$thumb    = anyutv_get_image( $thumb_id, 'post-thumbnail', array( 'alt' => get_the_title( $post_id ) ) );
+		$url      = wp_get_attachment_url( $thumb_id );
 
 	} else {
 
@@ -44,7 +45,7 @@ function anyutv_post_image() {
 
 		} elseif ( is_int( $img[0] ) ) {
 
-			$thumb = wp_get_attachment_image( $img[0], 'post-thumbnail', '', array( 'alt' => get_the_title( $post_id ) ) );
+			$thumb = anyutv_get_image( $img[0], 'post-thumbnail', array( 'alt' => get_the_title( $post_id ) ) );
 			$url   = wp_get_attachment_url( $img[0] );
 
 		} else {
@@ -122,15 +123,26 @@ function anyutv_get_gallery_html( $images, $atts = array() ) {
 		'link' => ''
 	) );
 
+	global $_wp_additional_image_sizes;
+
+	$image_size = 'post-thumbnail';
+
+	if ( isset( $_wp_additional_image_sizes[ $image_size ] ) ) {
+		$width  = $_wp_additional_image_sizes[ $image_size ]['width'];
+		$height = $_wp_additional_image_sizes[ $image_size ]['height'];
+	} else {
+		$width  = 770;
+		$height = 475;
+	}
+
 	$default_slider_init = array(
-		'infinite'       => true,
-		'speed'          => 400,
-		'fade'           => true,
-		'cssEase'        => 'linear',
-		'adaptiveHeight' => true,
-		'dots'           => false,
-		'prevArrow'      => '<span class="entry-gallery-prev"></span>',
-		'nextArrow'      => '<span class="entry-gallery-next"></span>'
+		'fade'       => true,
+		'arrows'     => true,
+		'buttons'    => false,
+		'width'      => '100%',
+		'height'     => $height,
+		'slideDistance' => 0,
+		'aspectRatio'   => round( $width / $height, 3 ),
 	);
 
 	/**
@@ -158,6 +170,8 @@ function anyutv_get_gallery_html( $images, $atts = array() ) {
 	$items   = array();
 	$counter = 0;
 
+
+
 	foreach ( $images as $img ) {
 
 		$caption = '';
@@ -170,7 +184,8 @@ function anyutv_get_gallery_html( $images, $atts = array() ) {
 		}
 
 		if ( 0 < intval( $img ) ) {
-			$image = wp_get_attachment_image( $img, 'post-thumbnail', '' );
+
+			$image = anyutv_get_image( $img, $image_size, array( 'class' => 'sp-image' ) );
 			$url   = wp_get_attachment_url( $img );
 
 			$attachment = get_post( $img );
@@ -183,12 +198,10 @@ function anyutv_get_gallery_html( $images, $atts = array() ) {
 
 		} else {
 
-			global $_wp_additional_image_sizes;
-
-			if ( ! isset( $_wp_additional_image_sizes['post-thumbnail'] ) ) {
+			if ( ! isset( $_wp_additional_image_sizes[ $image_size ] ) ) {
 				$width = 'auto';
 			} else {
-				$width = $_wp_additional_image_sizes['post-thumbnail']['width'];
+				$width = $_wp_additional_image_sizes[ $image_size ]['width'];
 			}
 
 			$image = '<img src="' . esc_url( $img ) . '" width="' . $width . '">';
@@ -198,7 +211,7 @@ function anyutv_get_gallery_html( $images, $atts = array() ) {
 		if ( ! empty( $atts['link'] ) && 'none' === $atts['link'] ) {
 			$format = '<figure class="%3$s">%1$s%4$s</figure>';
 		} else {
-			$format = '<figure class="%3$s"><a href="%2$s" class="%3$s_link popup-gallery-item">%1$s<span class="link-marker popup"></span></a>%4$s</figure>';
+			$format = '<figure class="%3$s sp-slide"><a href="%2$s" class="%3$s_link popup-gallery-item">%1$s<span class="link-marker popup"></span></a>%4$s</figure>';
 		}
 
 		$items[] = sprintf(
@@ -210,11 +223,32 @@ function anyutv_get_gallery_html( $images, $atts = array() ) {
 	$items = implode( "\r\n", $items );
 
 	$result = sprintf(
-		'<div class="%2$s popup-gallery" data-init=\'%3$s\' data-popup-init=\'%4$s\'>%1$s</div>',
+		'<div class="%2$s popup-gallery slider-pro" data-init=\'%3$s\' data-popup-init=\'%4$s\'><div class="sp-slides">%1$s</div></div>',
 		$items, 'entry-gallery', $init, $gall_init
 	);
 
 	return $result;
+}
+
+/**
+ * Get attachment image tag by id and size
+ */
+function anyutv_get_image( $id = null, $size = 'post-thumbnail', $attr = array() ) {
+
+	$image = wp_get_attachment_image_src( $id, $size );
+
+	if ( empty( $image ) ) {
+		return '';
+	}
+
+	$atts = '';
+
+	foreach ( $attr as $name => $value ) {
+		$atts .= ' ' . $name . '="' . esc_attr( $value ) . '"';
+	}
+
+	return sprintf( '<img src="%1$s" width="%2$s" height="%3$s">', $image[0], $image[1], $image[2], $atts );
+
 }
 
 /**
@@ -287,5 +321,5 @@ function anyutv_post_video() {
 	}
 
 	printf( '<div class="entry-video embed-responsive embed-responsive-16by9">%s</div>', $result );
-	
+
 }

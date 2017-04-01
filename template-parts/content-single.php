@@ -2,30 +2,21 @@
 /**
  * Template part for displaying single posts.
  *
+ * @link https://codex.wordpress.org/Template_Hierarchy
+ *
  * @package anyutv
  */
-
 ?>
-<article id="post-<?php the_ID(); ?>" <?php post_class( 'is-single' ); ?>>
-	<?php anyutv_post_thumbnail( false ); ?>
+
+<article id="post-<?php the_ID(); ?>" <?php post_class( anyutv_single_classes() ); ?>>
+	<div class="entry-pre-header">
+		<?php anyutv_post_thumbnail( false ); ?>
+		<div class="entry-meta">
+			<?php anyutv_post_meta( 'single' ); ?>
+		</div><!-- .entry-meta -->
+	</div>
 	<header class="entry-header">
-
-		<?php
-			$format = get_post_format();
-
-			if ( ! $format ) {
-				$format = 'standard';
-			}
-
-			anyutv_format_icon( $format );
-		?>
-		<div class="entry-header-data">
-			<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
-
-			<div class="entry-meta">
-				<?php anyutv_post_meta( 'single' ); ?>
-			</div><!-- .entry-meta -->
-		</div>
+		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
 	</header><!-- .entry-header -->
 
 	<div class="entry-content">
@@ -40,15 +31,13 @@
 
 	<footer class="entry-footer">
 		<?php anyutv_post_meta( 'single', 'footer' ); ?>
-		<?php
-			the_post_navigation(
-				array(
-					'prev_text' => '<span class="post-nav-label button">' . __( 'Prev', 'anyutv' ) . '</span><span class="post-nav-title">%title</span>',
-					'next_text' => '<span class="post-nav-label button">' . __( 'Next', 'anyutv' ) . '</span><span class="post-nav-title">%title</span>'
-				)
-			);
-		?>
 	</footer><!-- .entry-footer -->
+	<?php
+		// If comments are open or we have at least one comment, load up the comment template.
+		if ( comments_open() || get_comments_number() ) :
+			comments_template();
+		endif;
+	?>
+
 </article><!-- #post-## -->
 
-<?php do_action( 'anyutv_after_single_post_content' ); ?>

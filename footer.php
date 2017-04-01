@@ -2,7 +2,9 @@
 /**
  * The template for displaying the footer.
  *
- * Contains the closing of the #content div and all content after
+ * Contains the closing of the #content div and all content after.
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
  *
  * @package anyutv
  */
@@ -12,37 +14,27 @@
 	</div><!-- #content -->
 
 	<footer id="colophon" class="site-footer" role="contentinfo">
-		<div class="footer-widget-area">
-			<div class="container">
-				<div class="row">
-				<?php 
-					foreach ( array( 'footer-sidebar-1', 'footer-sidebar-2', 'footer-sidebar-3' ) as $footer_sidebar ) {
-						
-						if ( ! is_active_sidebar( $footer_sidebar ) ) {
-							continue;
-						}
-						?>
-						<div class="col-md-4 col-sm-4 col-xs-12">
-							<?php dynamic_sidebar( $footer_sidebar ); ?>
-						</div>
-						<?php
-					}
-				?>
-				</div>
-			</div>
-		</div>
+		<?php anyutv_footer_sidebars(); ?>
 		<div class="site-info">
 			<div class="container">
 			<?php
-				anyutv_to_top();
 				$anyutv_custm_copyright = anyutv_get_option( 'footer_copyright' );
 				if ( ! empty( $anyutv_custm_copyright ) ) {
-					echo esc_textarea( $anyutv_custm_copyright );
+					echo wp_kses_post( $anyutv_custm_copyright );
 				} else {
 			?>
+				<div class="footer-logo">
+					<a class="footer-logo-link" href="<?php echo home_url( '/' ); ?>"><?php bloginfo( 'name' ); ?></a>
+				</div>
 				<a rel="nofollow" href="<?php echo esc_url( __( 'http://wordpress.org/', 'anyutv' ) ); ?>"><?php printf( esc_html__( 'Proudly powered by %s', 'anyutv' ), 'WordPress' ); ?></a>
-				<span class="sep"> | </span>
-				<?php printf( __( 'Theme: %1$s by <a href="%2$s" rel="nofollow">Anyu</a>.', 'anyutv' ), 'Anyu', esc_url( 'https://anyu.tv/' ) ); ?>
+				<br>
+				<?php
+					printf(
+						__( '%1$s WordPress Theme, &copy; 2016 <a href="%2$s" rel="nofollow">Tefox</a>.', 'anyutv' ),
+						'Renard',
+						'http://www.tefox.net/'
+					);
+				?>
 			<?php } ?>
 			</div>
 		</div><!-- .site-info -->

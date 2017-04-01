@@ -1,13 +1,16 @@
 <?php
 /**
- * The template used for displaying page content in page.php
+ * Template part for displaying page content in page.php.
+ *
+ * @link https://codex.wordpress.org/Template_Hierarchy
  *
  * @package anyutv
  */
 
 ?>
+
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<header class="entry-header">
+	<header class="entry-header-page">
 		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
 	</header><!-- .entry-header -->
 
@@ -21,4 +24,10 @@
 		?>
 	</div><!-- .entry-content -->
 
+	<?php
+		// If comments are open or we have at least one comment, load up the comment template.
+		if ( comments_open() || get_comments_number() ) :
+			comments_template();
+		endif;
+	?>
 </article><!-- #post-## -->

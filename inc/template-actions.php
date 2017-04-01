@@ -11,15 +11,122 @@
 
 // slider in showcase area
 add_action( 'anyutv_showcase_area', 'anyutv_slider' );
-// about box in sidebar
-add_action( 'anyutv_before_sidebar', 'anyutv_about_box' );
-// follow box in sidebar
-add_action( 'anyutv_before_sidebar', 'anyutv_follow_box', 15 );
 // modify default comment form
 add_filter( 'comment_form_default_fields', 'anyutv_comment_form_fields' );
 // modify excerpt more symbols
 add_filter( 'excerpt_more', 'anyutv_excerpt_more' );
+// Wrap comment fields into separaate row
+add_action( 'comment_form_before_fields', 'anyutv_open_comments_fields_wrap' );
+add_action( 'comment_form_after_fields', 'anyutv_close_comments_fields_wrap' );
+// about box in sidebar
+add_action( 'anyutv_before_sidebar', 'anyutv_about_box' );
+// Fix preview for text logo in customizer
+add_filter( 'get_custom_logo', 'anyutv_fix_logo_preview' );
+// Remove slides from main query
+add_action( 'pre_get_posts', 'anyutv_maybe_remove_slides_from_query' );
 
+/**
+ * Maybe remove slides from main query
+ *
+ * @return void
+ */
+function anyutv_maybe_remove_slides_from_query( $query ) {
+
+	if ( ! $query->is_main_query() || is_admin() ) {
+		return;
+	}
+
+	if ( ! $query->is_home() ) {
+		return;
+	}
+
+	$slides = anyutv_get_slides();
+
+	if ( empty( $slides ) ) {
+		return;
+	}
+
+	$query->set( 'post__not_in', $slides );
+
+}
+
+/**
+ * Return slides list
+ *
+ * @return array
+ */
+function anyutv_get_slides() {
+
+	$slides_from = anyutv_get_option( 'slides_from', 'recent_posts' );
+	$num         = anyutv_get_option( 'slides_num', 4 );
+
+	$query_args = array(
+		'posts_per_page'      => absint( $num ),
+		'ignore_sticky_posts' => 1
+	);
+
+	switch ( $slides_from ) {
+		case 'category':
+			$category = anyutv_get_option( 'slides_cat' );
+			if ( $category ) {
+				$query_args['category_name'] = esc_attr( $category );
+			}
+			break;
+
+		case 'sticky':
+			$sticky = get_option( 'sticky_posts' );
+			if ( ! empty( $sticky ) ) {
+				$query_args['post__in'] = $sticky;
+			}
+			break;
+	}
+
+	/**
+	 * Allow to rewrite slider query arguments from child theme/3rd party plugins
+	 */
+	$query_args = apply_filters( 'anyutv_slider_query_args', $query_args );
+
+	$slider_query = new WP_Query( $query_args );
+
+	if ( ! $slider_query->have_posts() ) {
+		return array();
+	}
+
+	$shown_slides = array();
+
+	while ( $slider_query->have_posts() ) {
+		$slider_query->the_post();
+		if ( ! has_post_thumbnail( $slider_query->post->ID ) ) {
+			continue;
+		}
+		$shown_slides[] = $slider_query->post->ID;
+	}
+
+	wp_reset_postdata();
+
+	wp_cache_set( 'slides', $shown_slides, 'anyutv' );
+
+	return $shown_slides;
+}
+
+/**
+ * Fix preview for text logo in customizer
+ */
+function anyutv_fix_logo_preview( $logo ) {
+
+	if ( ! is_customize_preview() ) {
+		return $logo;
+	}
+
+	$custom_logo_id = get_theme_mod( 'custom_logo' );
+
+	if ( ! $custom_logo_id ) {
+		return reanrd_get_text_logo( 'custom-logo-link' );
+	} else {
+		return $logo;
+	}
+
+}
 
 /**
  * Get standard slider output
@@ -38,104 +145,96 @@ function anyutv_slider() {
 		return '';
 	}
 
-	$slides_from = anyutv_get_option( 'slides_from', 'recent_posts' );
-	$num         = anyutv_get_option( 'slides_num', 4 );
+	$show_banner  = anyutv_get_option( 'slider_banner', true );
+	$btn_text     = anyutv_get_option( 'slider_btn_text', __( 'Read', 'anyutv' ) );
+	$result       = '';
 
-	$query_args = array(
-		'posts_per_page'      => absint( $num ),
-		'ignore_sticky_posts' => 1
-	);
+	$slides = wp_cache_get( 'slides', 'anyutv' );
 
-	switch ( $slides_from ) {
-		case 'category':
-			$category = anyutv_get_option( 'slides_cat' );
-			if ( $category ) {
-				$query_args['category_name'] = esc_attr( $category );
-			}
-			break;
-		
-		case 'sticky':
-			$sticky = get_option( 'sticky_posts' );
-			if ( ! empty( $sticky ) ) {
-				$query_args['post__in'] = $sticky;
-			}
-			break;
+	if ( empty( $slides ) ) {
+		$slides = anyutv_get_slides();
 	}
 
-	/**
-	 * Allow to rewrite slider query arguments from child theme/3rd party plugins
-	 */
-	$query_args = apply_filters( 'anyutv_slider_query_args', $query_args );
-
-	$slider_query = new WP_Query( $query_args );
-
-	if ( ! $slider_query->have_posts() ) {
-		return;
+	if ( empty( $slides ) ) {
+		return '';
 	}
 
-	$show_banner = anyutv_get_option( 'slider_banner', true );
-	$btn_text    = anyutv_get_option( 'slider_btn_text', __( 'Read', 'anyutv' ) );
+	foreach ( $slides as $slide_id ) {
 
-	$result = '';
-
-	while ( $slider_query->have_posts() ) {
-		$slider_query->the_post();
-		if ( ! has_post_thumbnail( $slider_query->post->ID ) ) {
-			continue;
-		}
-		$image  = get_the_post_thumbnail( $slider_query->post->ID, 'anyutv-slider-thumbnail', array( 'alt' => get_the_title( $slider_query->post->ID ) ) );
-		$banner = '';
+		$image_args = array( 'alt' => get_the_title( $slide_id ), 'class' => 'sp-image' );
+		$image      = get_the_post_thumbnail( $slide_id, 'anyutv-slider-thumbnail', $image_args );
+		$banner     = '';
 
 		if ( $show_banner ) {
-			$banner = anyutv_get_slider_banner( $slider_query->post->ID, esc_html( $btn_text ) );
+			$banner = anyutv_get_slider_banner( $slide_id, esc_html( $btn_text ) );
 		}
 
-		$result .= '<div class="slider-item">' . $image . $banner . '</div>';
+		$result .= '<div class="slider-item sp-slide">' . $image . $banner . '</div>';
+	}
+
+
+
+	global $_wp_additional_image_sizes;
+
+	if ( isset( $_wp_additional_image_sizes['anyutv-slider-thumbnail'] ) ) {
+		$width  = $_wp_additional_image_sizes['anyutv-slider-thumbnail']['width'];
+		$height = $_wp_additional_image_sizes['anyutv-slider-thumbnail']['height'];
+	} else {
+		$width  = 2000;
+		$height = 600;
 	}
 
 	$slider_defaults = apply_filters(
 		'anyutv_slider_default_args',
 		array(
-			'fade'   => false,
-			'arrows' => true,
-			'dots'   => true,
-			'speed'  => 400
-		) 
+			'fade'          => false,
+			'arrows'        => true,
+			'buttons'       => true,
+			'width'         => '100%',
+			'height'        => $height,
+			'forceSize'     => 'fullWidth',
+			'slideDistance' => 0,
+			'aspectRatio'   => round( $width / $height, 3 ),
+		)
 	);
 
-	$fade   = ( 'fade' == anyutv_get_option( 'slider_animation', 'slide' ) );
+	$fade   = ( 'fade' == anyutv_get_option( 'slider_animation', 'fade' ) );
 	$arrows = anyutv_get_option( 'slider_arrows', true );
 	$pager  = anyutv_get_option( 'slider_pager', true );
 
-	$slider_args = wp_parse_args( 
+	$slider_args = wp_parse_args(
 		array(
-			'fade'   => (bool)$fade,
-			'arrows' => (bool)$arrows,
-			'dots'   => (bool)$pager
-		), 
+			'fade'    => (bool)$fade,
+			'arrows'  => (bool)$arrows,
+			'buttons' => (bool)$pager
+		),
 		$slider_defaults
 	);
 
 	$slider_args = json_encode( $slider_args );
 
-	wp_reset_postdata();
-	wp_reset_query();
+	if ( empty( $result ) ) {
+		return;
+	}
 
 	/**
 	 * Filter slider output before printing
 	 */
-	$result = apply_filters( 
+	$result = apply_filters(
 		'anyutv_slider_output',
-		sprintf( '<div class="slider-box" data-args=\'%2$s\'>%1$s</div>', $result, $slider_args )
+		sprintf(
+			'<div class="slider-box slider-pro" data-args=\'%2$s\'><div class="sp-slides">%1$s</div></div>',
+			$result, $slider_args
+		)
 	);
 
 	echo $result;
 
 }
-	
+
 /**
  * Get slider banner content by post ID
- * 
+ *
  * @param  int    $post_id  post ID to get banner for
  * @param  string $btn_text banner button text
  */
@@ -155,82 +254,9 @@ function anyutv_get_slider_banner( $post_id, $btn_text ) {
 	}
 	$excerpt = '<div class="slider-banner-excerpt">' . $excerpt . '</div>';
 
-	$button = '<div class="slider-banner-button-box"><a href="' . get_permalink( $post_id ) . '" class="slider-banner-button">' . $btn_text . '</a></div>';
+	$button = '<div class="slider-banner-button-box"><a href="' . esc_url( get_permalink( $post_id ) ) . '" class="slider-banner-button">' . $btn_text . '</a></div>';
 
 	return sprintf( $format, $title, $excerpt, $button );
-}
-
-/**
- * Show about box in sidebar
- */
-function anyutv_about_box() {
-
-	$is_enabled = anyutv_get_option( 'about_enabled', true );
-
-	if ( ! $is_enabled ) {
-		return;
-	}
-
-	// prepare data
-	$title   = anyutv_get_option( 'about_title', __( 'About Me', 'anyutv' ) );
-	$image   = anyutv_get_option( 'about_img' );
-	$message = anyutv_get_option( 'about_message', __( 'Hello! And welcome to my personal website!', 'anyutv' ) );
-
-	$title_html   = ( ! empty( $title ) ) ? sprintf( '<h4 class="widget-title">%s</h4>', sanitize_text_field( $title ) ) : '';
-	$image_html   = ( ! empty( $image ) ) ? sprintf( '<img src="%1$s" alt="%2$s">', esc_url( $image ), esc_attr( $title ) ) : '';
-	$message_html = ( ! empty( $message ) ) ? sprintf( '<div class="custom-box-about-message">%s</div>', esc_textarea( $message ) ) : '';
-
-	?>
-	<div class="widget custom-box-about">
-		<?php echo $title_html; ?>
-		<?php echo $image_html; ?>
-		<?php echo $message_html; ?>
-	</div>
-	<?php
-}
-
-function anyutv_follow_box() {
-
-	$is_enabled = anyutv_get_option( 'follow_enabled', true );
-
-	if ( ! $is_enabled ) {
-		return;
-	}
-
-	$socials = anyutv_allowed_socials();
-
-	if ( ! is_array( $socials ) ) {
-		return;
-	}
-
-	$title      = anyutv_get_option( 'follow_title', __( 'Follow Me', 'anyutv' ) );
-	$title_html = ( ! empty( $title ) ) ? sprintf( '<h4 class="widget-title">%s</h4>', sanitize_text_field( $title ) ) : '';
-
-	$social_list = '';
-	$item_format = '<div class="custom-box-follow-item"><a href="%1$s" class="item-%3$s"><i class="%2$s"></i></a></div>';
-
-	foreach ( $socials as $net => $data ) {
-		
-		$data = wp_parse_args( $data, array( 'label' => '', 'icon' => '', 'default' => '' ) );
-		$url  = anyutv_get_option( 'follow_' . $net, $data['default'] );
-
-		if ( ! $url ) {
-			continue;
-		}
-
-		$social_list .= sprintf( $item_format, esc_url( $url ), esc_attr( $data['icon'] ), esc_attr( $net ) );
-
-	}
-
-	$social_list_html = ( ! empty( $social_list ) ) ? sprintf( '<div class="custom-box-follow-list">%s</div>', $social_list ) : '';
-
-	?>
-	<div class="widget custom-box-follow">
-		<?php echo $title_html; ?>
-		<?php echo $social_list_html; ?>
-	</div>
-	<?php
-
 }
 
 /**
@@ -256,19 +282,50 @@ function anyutv_comment_form_fields( $fields ) {
  * Replace default excerpt more symbols
  */
 function anyutv_excerpt_more($more) {
-	return ' ...';
+	return ' &hellip;';
 }
 
 /**
- * Backwards compatibility for title tag
+ * Wrap comment fields into separaate row
  */
-if ( ! function_exists( '_wp_render_title_tag' ) ) :
-	
-	function anyutv_render_title() {
-		?>
-		<title><?php wp_title( '|', true, 'right' ); ?></title>
-		<?php
-	}
-	add_action( 'wp_head', 'anyutv_render_title' );
+function anyutv_open_comments_fields_wrap() {
+	echo '<div class="comment-fields-wrap">';
+}
 
-endif;
+/**
+ * Wrap comment fields into separaate row
+ */
+function anyutv_close_comments_fields_wrap() {
+	echo '</div>';
+}
+
+/**
+ * Show about box in sidebar
+ */
+function anyutv_about_box() {
+
+	$is_enabled = anyutv_get_option( 'about_enabled', false );
+
+	if ( ! $is_enabled ) {
+		return;
+	}
+
+	// prepare data
+	$image   = anyutv_get_option( 'about_img' );
+	$message = anyutv_get_option( 'about_message', __( 'Hello! And welcome to my personal website!', 'anyutv' ) );
+
+	$image_html = ( ! empty( $image ) )
+				? sprintf( '<div class="custom-box-about-img"><img src="%1$s" alt=""></div>', esc_url( $image ) )
+				: '';
+
+	$message_html = ( ! empty( $message ) )
+					? sprintf( '<div class="custom-box-about-message">%s</div>', wp_kses_post( $message ) )
+					: '';
+
+	?>
+	<div class="widget sidebar-widget custom-box-about">
+		<?php echo $image_html; ?>
+		<?php echo $message_html; ?>
+	</div>
+	<?php
+}

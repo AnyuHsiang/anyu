@@ -1,13 +1,11 @@
 <?php
 /**
- * anyutv functions and definitions
+ * anyutv functions and definitions.
+ *
+ * @link https://developer.wordpress.org/themes/basics/theme-functions/
  *
  * @package anyutv
  */
-
-if ( ! isset( $content_width ) ) {
-	$content_width = 650;
-}
 
 if ( ! function_exists( 'anyutv_setup' ) ) :
 /**
@@ -22,14 +20,12 @@ function anyutv_setup() {
 	 * Make theme available for translation.
 	 * Translations can be filed in the /languages/ directory.
 	 * If you're building a theme based on anyutv, use a find and replace
-	 * to change 'anyutv' to the name of your theme in all the template files
+	 * to change 'anyutv' to the name of your theme in all the template files.
 	 */
 	load_theme_textdomain( 'anyutv', get_template_directory() . '/languages' );
 
 	// Add default posts and comments RSS feed links to head.
 	add_theme_support( 'automatic-feed-links' );
-	// Add editor styling
-	add_editor_style( 'editor-style.css' );
 
 	/*
 	 * Let WordPress manage the document title.
@@ -42,56 +38,12 @@ function anyutv_setup() {
 	/*
 	 * Enable support for Post Thumbnails on posts and pages.
 	 *
-	 * @link http://codex.wordpress.org/Function_Reference/add_theme_support#Post_Thumbnails
+	 * @link https://developer.wordpress.org/themes/functionality/featured-images-post-thumbnails/
 	 */
 	add_theme_support( 'post-thumbnails' );
 
-	/**
-	 * Allow to rewrite defined image sizes from child theme
-	 */
-	$default_image_sizes = array(
-		'post-thumbnail' => array(
-			'width'  => 730,
-			'height' => 360,
-			'crop'   => true
-		),
-		'slider-thumbnail' => array(
-			'width'  => 1900,
-			'height' => 445,
-			'crop'   => true
-		),
-		'related-thumbnail' => array(
-			'width'  => 210,
-			'height' => 180,
-			'crop'   => true
-		)
-	);
-
-	$image_sizes = wp_parse_args(
-		apply_filters( 'anyutv_image_sizes', $default_image_sizes ),
-		$default_image_sizes
-	);
-
-	// default post thumbnail size
-	set_post_thumbnail_size(
-		$image_sizes['post-thumbnail']['width'],
-		$image_sizes['post-thumbnail']['height'],
-		$image_sizes['post-thumbnail']['crop']
-	);
-
-	// single slide thumbnail
-	add_image_size( 'anyutv-slider-thumbnail',
-		$image_sizes['slider-thumbnail']['width'],
-		$image_sizes['slider-thumbnail']['height'],
-		$image_sizes['slider-thumbnail']['crop']
-	);
-
-	// related post thumbnail
-	add_image_size( 'anyutv-related-thumbnail',
-		$image_sizes['related-thumbnail']['width'],
-		$image_sizes['related-thumbnail']['height'],
-		$image_sizes['related-thumbnail']['crop']
-	);
+	set_post_thumbnail_size( 770, 475, true );
+	add_image_size( 'anyutv-slider-thumbnail', 2000, 600, true );
 
 	// This theme uses wp_nav_menu() in one location.
 	register_nav_menus( array(
@@ -112,65 +64,100 @@ function anyutv_setup() {
 
 	/*
 	 * Enable support for Post Formats.
-	 * See http://codex.wordpress.org/Post_Formats
+	 * See https://developer.wordpress.org/themes/functionality/post-formats/
 	 */
 	add_theme_support( 'post-formats', array(
-		'image',
 		'gallery',
+		'image',
 		'video',
 		'quote',
+		'link',
 	) );
 
 	// Set up the WordPress core custom background feature.
 	add_theme_support( 'custom-background', apply_filters( 'anyutv_custom_background_args', array(
-		'default-color' => 'f3f3f3',
+		'default-color' => 'ffffff',
 		'default-image' => '',
 	) ) );
+
+	// Setup custom logo feature
+	add_theme_support( 'custom-logo' );
+
+	// This theme uses wp_nav_menu() in one location.
+	register_nav_menus( array(
+		'primary' => esc_html__( 'Primary Menu', 'anyutv' ),
+		'social'  => esc_html__( 'Social Menu', 'anyutv' ),
+	) );
 }
 endif; // anyutv_setup
 add_action( 'after_setup_theme', 'anyutv_setup' );
 
 /**
- * Register widget area.注册侧小工具
+ * Set the content width in pixels, based on the theme's design and stylesheet.
  *
- * @link http://codex.wordpress.org/Function_Reference/register_sidebar
+ * Priority 0 to make it available to lower priority callbacks.
+ *
+ * @global int $content_width
+ */
+function anyutv_content_width() {
+	$GLOBALS['content_width'] = apply_filters( 'anyutv_content_width', 640 );
+}
+add_action( 'after_setup_theme', 'anyutv_content_width', 0 );
+
+/**
+ * Register widget area.
+ *
+ * @link https://developer.wordpress.org/themes/functionality/sidebars/#registering-a-sidebar
  */
 function anyutv_widgets_init() {
+
 	register_sidebar( array(
-		'name'          => esc_html__( '侧边栏', 'anyutv' ),
+		'name'          => esc_html__( 'Sidebar', 'anyutv' ),
 		'id'            => 'sidebar-1',
 		'description'   => '',
-		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'before_widget' => '<aside id="%1$s" class="widget sidebar-widget %2$s">',
 		'after_widget'  => '</aside>',
-		'before_title'  => '<h4 class="widget-title">',
-		'after_title'   => '</h4>',
+		'before_title'  => '<h3 class="widget-title">',
+		'after_title'   => '</h3>',
 	) );
+
 	register_sidebar( array(
-		'name'          => esc_html__( '底栏左侧小工具', 'anyutv' ),
+		'name'          => esc_html__( 'Footer Sidebar 1', 'anyutv' ),
 		'id'            => 'footer-sidebar-1',
 		'description'   => '',
-		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'before_widget' => '<aside id="%1$s" class="widget footer-widget %2$s">',
 		'after_widget'  => '</aside>',
-		'before_title'  => '<h4 class="widget-title">',
-		'after_title'   => '</h4>',
+		'before_title'  => '<h3 class="widget-title">',
+		'after_title'   => '</h3>',
 	) );
+
 	register_sidebar( array(
-		'name'          => esc_html__( '底栏中间小工具', 'anyutv' ),
+		'name'          => esc_html__( 'Footer Sidebar 2', 'anyutv' ),
 		'id'            => 'footer-sidebar-2',
 		'description'   => '',
-		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'before_widget' => '<aside id="%1$s" class="widget footer-widget %2$s">',
 		'after_widget'  => '</aside>',
-		'before_title'  => '<h4 class="widget-title">',
-		'after_title'   => '</h4>',
+		'before_title'  => '<h3 class="widget-title">',
+		'after_title'   => '</h3>',
 	) );
+
 	register_sidebar( array(
-		'name'          => esc_html__( '底栏右侧小工具', 'anyutv' ),
+		'name'          => esc_html__( 'Footer Sidebar 3', 'anyutv' ),
 		'id'            => 'footer-sidebar-3',
 		'description'   => '',
-		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'before_widget' => '<aside id="%1$s" class="widget footer-widget %2$s">',
 		'after_widget'  => '</aside>',
-		'before_title'  => '<h4 class="widget-title">',
-		'after_title'   => '</h4>',
+		'before_title'  => '<h3 class="widget-title">',
+		'after_title'   => '</h3>',
+	) );
+	register_sidebar( array(
+		'name'          => esc_html__( 'Footer Sidebar 4', 'anyutv' ),
+		'id'            => 'footer-sidebar-4',
+		'description'   => '',
+		'before_widget' => '<aside id="%1$s" class="widget footer-widget %2$s">',
+		'after_widget'  => '</aside>',
+		'before_title'  => '<h3 class="widget-title">',
+		'after_title'   => '</h3>',
 	) );
 
 }
@@ -179,113 +166,25 @@ add_action( 'widgets_init', 'anyutv_widgets_init' );
 /**
  * Enqueue scripts and styles.
  */
-function anyutv_assets() {
+function anyutv_scripts() {
 
-	$base_url = get_template_directory_uri();
+	$base = get_template_directory_uri();
 
-	// Styles
 	wp_enqueue_style( 'anyutv-fonts', anyutv_fonts_url() );
-	wp_enqueue_style( 'anyutv-font-awesome', $base_url . '/css/font-awesome.min.css', false, '4.5.0' );
-	wp_enqueue_style( 'anyutv-style', get_stylesheet_uri(), false, '1.1.0' );
+	wp_enqueue_style( 'font-awesome', $base . '/css/font-awesome.min.css', false, '4.5.0' );
+	wp_enqueue_style( 'anyutv-style', get_stylesheet_uri() );
 
-	// Scripts
-	wp_enqueue_script( 'anyutv-slick-slider', $base_url . '/js/slick.js', array( 'jquery' ), '1.5.0', true );
-	wp_enqueue_script( 'anyutv-magnific-popup', $base_url . '/js/jquery.magnific-popup.js', array( 'jquery' ), '1.0.0', true );
-	wp_enqueue_script( 'anyutv-navigation', $base_url . '/js/navigation.js', array( 'jquery', 'hoverIntent' ), '20120206', true );
-	wp_enqueue_script( 'anyutv-skip-link-focus-fix', $base_url . '/js/skip-link-focus-fix.js', array(), '20130115', true );
+	wp_enqueue_script( 'slider-pro', $base . '/js/jquery.sliderpro.min.js', array( 'jquery' ), '1.2.4', true );
+	wp_enqueue_script( 'magnific-popup', $base . '/js/magnific-popup.js', array( 'jquery' ), '1.0.0', true );
+	wp_enqueue_script( 'anyutv-scripts', $base . '/js/script.js', array( 'jquery', 'hoverIntent' ), '1.0.0', true );
+	wp_enqueue_script( 'anyutv-skip-link-focus-fix', $base . '/js/skip-link-focus-fix.js', array(), '1.0.0', true );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
 
-	$menu_type = anyutv_get_option( 'sticky_menu', 'static' );
-
-	if ( 'sticky' === $menu_type ) {
-		wp_enqueue_script( 'anyutv-stickup', $base_url . '/js/jquery.stickup.js', array( 'jquery' ), '1.1.0', true );
-	}
-
-	wp_enqueue_script( 'anyutv-custom-script', $base_url . '/js/script.js', array( 'jquery' ), '1.1.0', true );
 }
-add_action( 'wp_enqueue_scripts', 'anyutv_assets' );
-
-/**
- * Get necessary Google fonts URL暂时注释掉
-*/
-function anyutv_fonts_url() {
-
-	$fonts_url = '';
-
-	$locale = get_locale();
-	$cyrillic_locales = array( 'ru_RU', 'mk_MK', 'ky_KY', 'bg_BG', 'sr_RS', 'uk', 'bel' );
-
-	/* Translators: If there are characters in your language that are not
-	 * supported by Montserrat Alternates, translate this to 'off'. Do not translate
-	 * into your own language.
-	 */
-	$montserrat = _x( 'on', 'Montserrat Alternates font: on or off', 'anyutv' );
-
-	/* Translators: If there are characters in your language that are not
-	 * supported by Open Sans Condensed, translate this to 'off'. Do not translate
-	 * into your own language.
-	 */
-	$open_sans_condensed = _x( 'on', 'Open Sans Condensed font: on or off', 'anyutv' );
-
-	/* Translators: If there are characters in your language that are not
-	 * supported by Open Sans, translate this to 'off'. Do not translate
-	 * into your own language.
-	 */
-	$open_sans = _x( 'on', 'Open Sans font: on or off', 'anyutv' );
-
-	if ( 'off' == $montserrat && 'off' == $open_sans_condensed && 'off' == $open_sans ) {
-		return $fonts_url;
-	}
-
-	$font_families = array();
-
-	if ( 'off' !== $montserrat ) {
-		$font_families[] = 'Montserrat Alternates';
-	}
-
-	if ( 'off' !== $open_sans_condensed ) {
-		$font_families[] = 'Open Sans Condensed:300,700,300italic';
-	}
-
-	if ( 'off' !== $open_sans ) {
-		$font_families[] = 'Open Sans:300,400,700,400italic,700italic';
-	}
-
-	$query_args = array(
-		'family' => urlencode( implode( '|', $font_families ) ),
-		'subset' => urlencode( 'latin,latin-ext' ),
-	);
-
-	if ( in_array($locale, $cyrillic_locales) ) {
-		$query_args['subset'] = urlencode( 'latin,latin-ext,cyrillic' );
-	}
-
-	$fonts_url = add_query_arg( $query_args, '//fonts.googleapis.com/css' );
-
-	return $fonts_url;
-}
-
-
-/**
- * Get theme option by name
- *
- * @param  string $name    option name
- * @param  mixed  $default default option value
- */
-function anyutv_get_option( $name, $default = false ) {
-
-	$all_options = get_theme_mod( 'anyutv' );
-
-	if ( is_array( $all_options ) && isset( $all_options[$name] ) ) {
-		return $all_options[$name];
-	}
-
-	return $default;
-
-}
+add_action( 'wp_enqueue_scripts', 'anyutv_scripts' );
 
 /**
  * Implement the Custom Header feature.
@@ -298,14 +197,14 @@ require get_template_directory() . '/inc/custom-header.php';
 require get_template_directory() . '/inc/template-tags.php';
 
 /**
- * Post format specific template tags.
- */
-require get_template_directory() . '/inc/template-post-formats.php';
-
-/**
- * Functions hooked to custom theme actions.
+ * Custom template actions for this theme.
  */
 require get_template_directory() . '/inc/template-actions.php';
+
+/**
+ * Post format specific template tags
+ */
+require get_template_directory() . '/inc/template-post-formats.php';
 
 /**
  * Custom functions that act independently of the theme templates.
@@ -339,7 +238,6 @@ function e_secret($atts, $content=null){
     }
 }
 add_shortcode('secret','e_secret');
-
 //文章内容回复可见
 add_shortcode('reply', 'reply_to_read');
  
@@ -371,8 +269,6 @@ return do_shortcode($content);
 return $notice;
 }
 }
-
-
 //折叠收缩功能
 function xcollapse($atts, $content = null){
     extract(shortcode_atts(array("title"=>""),$atts));
@@ -386,14 +282,11 @@ function xcollapse($atts, $content = null){
     </div>';
 }
 add_shortcode('collapse', 'xcollapse');
-
 // 添加HTML按钮
 	function appthemes_add_quicktags() {
-
 	?> 
 
 	<script type="text/javascript"> 
-
 				QTags.addButton('hr', '横线', "<hr />\n");//添加横线
 				QTags.addButton('h3', 'H3标签', "<h3>", "</h3>\n"); //添加标题3
 				QTags.addButton('h4', 'H4标签', "<h4>", "</h4>\n"); //添加标题4
@@ -411,11 +304,8 @@ add_shortcode('collapse', 'xcollapse');
 	</script>
 
 	<?php
-
 }
-
 add_action('admin_print_footer_scripts', 'appthemes_add_quicktags' );
-
 // 禁止WordPress头部加载s.w.org
 	function remove_dns_prefetch( $hints, $relation_type ) {
 	if ( 'dns-prefetch' === $relation_type ) {
@@ -423,19 +313,14 @@ add_action('admin_print_footer_scripts', 'appthemes_add_quicktags' );
 	}
 	return $hints;
 	}
-
 	add_filter( 'wp_resource_hints', 'remove_dns_prefetch', 10, 2 );
-
 // 移除后台 Google Font API
 	function remove_open_sans_from_wp_core() {
 	    wp_deregister_style('open-sans');
 	    wp_register_style('open-sans', FALSE);
 	    wp_enqueue_style('open-sans', '');
 	}
-
 	add_action('init', 'remove_open_sans_from_wp_core');
-
-
 // 禁用 emoji's表情
 	     function disable_emojis() {
 		     remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
@@ -452,7 +337,6 @@ add_action('admin_print_footer_scripts', 'appthemes_add_quicktags' );
 		
 		 	add_filter('get_avatar', 'mimelove_get_ssl_avatar');
 			
-
 // 去除emojis wpemoji插件
 	function disable_emojis_tinymce( $plugins ) {
 		if ( is_array( $plugins ) ) {
@@ -477,3 +361,4 @@ add_action('admin_print_footer_scripts', 'appthemes_add_quicktags' );
 	
 //禁用xmlrpc离线发布协议
 add_filter('xmlrpc_enabled', '__return_false');
+

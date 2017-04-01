@@ -7,18 +7,70 @@
  * @package anyutv
  */
 
+if ( ! function_exists( 'anyutv_logo' ) ) :
 /**
- * Show post author显示作者，因本博客只有自己更新，暂时注释掉作者的显示
- function anyutv_post_author() {
+ * Print site logo
+ */
+function anyutv_logo() {
+
+	$custom_logo = null;
+
+	if ( is_home() || is_front_page() ) {
+		$tag = 'h1';
+	} else {
+		$tag = 'h2';
+	}
+
+	if ( function_exists( 'has_custom_logo' ) && has_custom_logo() ) {
+		$content = get_custom_logo();
+	} else {
+		$content = reanrd_get_text_logo();
+	}
+
+	printf( '<%1$s class="site-title">%2$s</%1$s>', $tag, $content );
+}
+endif;
+
+/**
+ * Returns text logo HTML
+ *
+ * @param  string $class Additional HTML class
+ * @return string
+ */
+function reanrd_get_text_logo( $class = '' ) {
+
+	return sprintf(
+		'<a href="%2$s" class="text-logo %3$s" rel="home">%1$s</a>',
+		get_bloginfo( 'name' ),
+		esc_url( home_url( '/' ) ),
+		esc_attr( $class )
+	);
+
+}
+
+/**
+ * Show post author
+ */
+function anyutv_post_author() {
+
+	$id = get_the_author_meta( 'ID' );
+
 	$author = sprintf(
-		'<span class="author vcard"><a class="url fn n" href="%1$s">%2$s</a></span>',
-		esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
+		'<span class="author"><a href="%1$s">%2$s</a></span>',
+		esc_url( get_author_posts_url( $id ) ),
 		esc_html( get_the_author() )
 	);
 
-	echo '<span class="entry-meta-item author"><i class="fa fa-user"></i> ' . $author . '</span>';
+	echo '<span class="entry-meta-item author">' . $author . '</span>';
 }
-*/
+
+/**
+ * Show post author avatar
+ */
+function anyutv_post_author_avatar() {
+	$id = get_the_author_meta( 'ID' );
+	echo '<span class="entry-meta-item avatar">' . get_avatar( $id, 40 ) . '</span>';
+}
 
 /**
  * Prints HTML with meta information for the current post-date.
@@ -40,7 +92,7 @@ function anyutv_post_date() {
 
 	$posted_on = '<a href="' . esc_url( get_permalink() ) . '" rel="bookmark">' . $time_string . '</a>';
 
-	echo '<span class="entry-meta-item posted-on"><i class="fa fa-clock-o"></i> ' . $posted_on . '</span>'; // WPCS: XSS OK.
+	echo '<span class="entry-meta-item posted-on">' . $posted_on . '</span>'; // WPCS: XSS OK.
 
 }
 
@@ -53,8 +105,8 @@ function anyutv_post_comments() {
 		return;
 	}
 
-	echo '<span class="entry-meta-item comments"><i class="fa fa-pencil-square-o"></i> ';
-	comments_popup_link( esc_html__( '评论本文', 'anyutv' ), esc_html__( '1 评论', 'anyutv' ), esc_html__( '% 评论', 'anyutv' ) );
+	echo '<span class="entry-meta-item comments">';
+	comments_popup_link( esc_html__( '留个言呗', 'anyutv' ), esc_html__( '1 评论', 'anyutv' ), esc_html__( '% 评论', 'anyutv' ) );
 	echo '</span>';
 
 }
@@ -88,6 +140,68 @@ function anyutv_post_tags() {
 	}
 
 }
+
+if ( ! function_exists( 'anyutv_posted_on' ) ) :
+/**
+ * Prints HTML with meta information for the current post-date/time and author.
+ */
+function anyutv_posted_on() {
+	$time_string = '<time class="entry-date published updated" datetime="%1$s">%2$s</time>';
+	if ( get_the_time( 'U' ) !== get_the_modified_time( 'U' ) ) {
+		$time_string = '<time class="entry-date published" datetime="%1$s">%2$s</time><time class="updated" datetime="%3$s">%4$s</time>';
+	}
+
+	$time_string = sprintf( $time_string,
+		esc_attr( get_the_date( 'c' ) ),
+		esc_html( get_the_date() ),
+		esc_attr( get_the_modified_date( 'c' ) ),
+		esc_html( get_the_modified_date() )
+	);
+
+	$posted_on = sprintf(
+		esc_html_x( 'Posted on %s', 'post date', 'anyutv' ),
+		'<a href="' . esc_url( get_permalink() ) . '" rel="bookmark">' . $time_string . '</a>'
+	);
+
+	$byline = sprintf(
+		esc_html_x( 'by %s', 'post author', 'anyutv' ),
+		'<span class="author vcard"><a class="url fn n" href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '">' . esc_html( get_the_author() ) . '</a></span>'
+	);
+
+	echo '<span class="posted-on">' . $posted_on . '</span><span class="byline"> ' . $byline . '</span>'; // WPCS: XSS OK.
+
+}
+endif;
+
+if ( ! function_exists( 'anyutv_entry_footer' ) ) :
+/**
+ * Prints HTML with meta information for the categories, tags and comments.
+ */
+function anyutv_entry_footer() {
+	// Hide category and tag text for pages.
+	if ( 'post' === get_post_type() ) {
+		/* translators: used between list items, there is a space after the comma */
+		$categories_list = get_the_category_list( esc_html__( ', ', 'anyutv' ) );
+		if ( $categories_list && anyutv_categorized_blog() ) {
+			printf( '<span class="cat-links">' . esc_html__( 'Posted in %1$s', 'anyutv' ) . '</span>', $categories_list ); // WPCS: XSS OK.
+		}
+
+		/* translators: used between list items, there is a space after the comma */
+		$tags_list = get_the_tag_list( '', esc_html__( ', ', 'anyutv' ) );
+		if ( $tags_list ) {
+			printf( '<span class="tags-links">' . esc_html__( 'Tagged %1$s', 'anyutv' ) . '</span>', $tags_list ); // WPCS: XSS OK.
+		}
+	}
+
+	if ( ! is_single() && ! post_password_required() && ( comments_open() || get_comments_number() ) ) {
+		echo '<span class="comments-link">';
+		comments_popup_link( esc_html__( 'Leave a comment', 'anyutv' ), esc_html__( '1 Comment', 'anyutv' ), esc_html__( '% Comments', 'anyutv' ) );
+		echo '</span>';
+	}
+
+	edit_post_link( esc_html__( 'Edit', 'anyutv' ), '<span class="edit-link">', '</span>' );
+}
+endif;
 
 /**
  * Returns true if a blog has more than 1 category.
@@ -134,151 +248,27 @@ add_action( 'edit_category', 'anyutv_category_transient_flusher' );
 add_action( 'save_post',     'anyutv_category_transient_flusher' );
 
 /**
- * Show site logo markup depending from site options
+ * Print social follow list
  */
-function anyutv_logo() {
+function anyutv_follow_list() {
 
-	$logo_img = anyutv_get_option( 'logo_img' );
+	$is_enabled = anyutv_get_option( 'follow_enabled', 1 );
 
-	$logo_tag = 'h2';
-
-	if ( is_front_page() ) {
-		$logo_tag = 'h1';
-	}
-
-	if ( false != $logo_img ) {
-		$logo_content = '<img src="' . esc_url( $logo_img ) . '" alt="' . get_bloginfo( 'name' ) . '">';
-	} else {
-		$logo_content = get_bloginfo( 'name' );
-	}
-
-	printf( '<%1$s class="site-logo"><a class="site-logo-link" href="%2$s">%3$s</a></%1$s>', $logo_tag, esc_url( home_url( '/' ) ), $logo_content );
-
-}
-
-/**
- * Show posts listing content depending from options
- */
-function anyutv_blog_content() {
-
-	$blog_content = anyutv_get_option( 'blog_content', 'excerpt' );
-
-	if ( 'excerpt' == $blog_content ) {
-		the_excerpt();
+	if ( ! $is_enabled ) {
 		return;
 	}
 
-	/* translators: %s: Name of current post */
-	the_content( sprintf(
-		wp_kses( __( 'Continue reading %s <span class="meta-nav">&rarr;</span>', 'anyutv' ), array( 'span' => array( 'class' => array() ) ) ),
-		the_title( '<span class="screen-reader-text">"', '"</span>', false )
+	$social_list = wp_nav_menu( array(
+		'theme_location'   => 'social',
+		'container'        => 'div',
+		'container_class'  => 'follow-list-wrap',
+		'menu_class'       => 'follow-list-items',
+		'depth'            => 1,
+		'echo'             => false,
+		'fallback_cb'      => '__return_empty_string',
 	) );
 
-	wp_link_pages( array(
-		'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'anyutv' ),
-		'after'  => '</div>',
-	) );
-
-}
-
-/**
- * Show format-related icon
- */
-function anyutv_format_icon( $format = 'standard' ) {
-
-	$formats = array(
-		'sticky'   => 'star',
-		'standard' => 'pencil',
-		'aside'    => 'map-marker',
-		'image'    => 'picture-o',
-		'gallery'  => 'picture-o',
-		'video'    => 'video-camera',
-		'quote'    => 'quote-left',
-		'link'     => 'link'
-	);
-
-	if ( ! array_key_exists( $format, $formats ) ) {
-		return '';
-	}
-
-	if ( is_sticky() ) {
-		$format = 'sticky';
-	}
-
-	printf( '<div class="entry-icon"><i class="fa fa-%s"></i></div>', $formats[$format] );
-
-}
-
-/**
- * Show post meta data
- *
- * @param string $page     page, meta called from
- * @param string $position position, meta called from
- * @param string $disable  disabled meta keys array
- */
-function anyutv_post_meta( $page = 'loop', $position = 'header', $disable = array() ) {
-
-	$default_meta = array(
-		'author' => array(
-			'page'     => $page,
-			'position' => 'header',
-			'callback' => 'anyutv_post_author',
-			'priority' => 1
-		),
-		'date' => array(
-			'page'     => $page,
-			'position' => 'header',
-			'callback' => 'anyutv_post_date',
-			'priority' => 5
-		),
-		'comments' => array(
-			'page'     => $page,
-			'position' => 'header',
-			'callback' => 'anyutv_post_comments',
-			'priority' => 5
-		),
-		'categories' => array(
-			'page'     => 'single',
-			'position' => 'footer',
-			'callback' => 'anyutv_post_categories',
-			'priority' => 1
-		),
-		'tags' => array(
-			'page'     => 'single',
-			'position' => 'footer',
-			'callback' => 'anyutv_post_tags',
-			'priority' => 5
-		)
-	);
-
-	/**
-	 * Get 3rd party meta items to show in meta block (or disable default from child theme)
-	 */
-	$meta_items = apply_filters( 'anyutv_meta_items_data', $default_meta, $page, $position );
-	$disable    = apply_filters( 'anyutv_disabled_meta', $disable );
-
-	foreach ( $meta_items as $meta_key => $data ) {
-
-		if ( is_array( $disable ) && in_array( $meta_key, $disable ) ) {
-			continue;
-		}
-		if ( empty( $data['page'] ) || $page != $data['page'] ) {
-			continue;
-		}
-		if ( empty( $data['position'] ) || $position != $data['position'] ) {
-			continue;
-		}
-		if ( empty( $data['callback'] ) || ! function_exists( $data['callback'] ) ) {
-			continue;
-		}
-
-		$priority = ( ! empty( $data['priority'] ) ) ? absint( $data['priority'] ) : 10;
-
-		add_action( 'anyutv_post_meta_' . $page . '_' . $position, $data['callback'], $priority );
-	}
-
-	do_action( 'anyutv_post_meta_' . $page . '_' . $position );
-
+	printf( '<div class="follow-list">%s</div>', $social_list );
 }
 
 /**
@@ -307,15 +297,136 @@ function anyutv_post_thumbnail( $is_linked = true ) {
 
 	if ( $is_linked ) {
 		$format = '<figure class="entry-thumbnail"><a href="%2$s">%1$s<span class="link-marker"></span></a></figure>';
-		$link   = get_permalink();
+		$link   = esc_url( get_permalink() );
 	} else {
 		$format = '<figure class="entry-thumbnail">%1$s</figure>';
 		$link   = false;
 	}
 
-	$image = get_the_post_thumbnail( get_the_id(), 'post-thumbnail', array( 'alt' => get_the_title() ) );
+	$size = 'post-thumbnail';
+
+	$image = get_the_post_thumbnail( get_the_id(), $size, array( 'alt' => get_the_title() ) );
 
 	printf( $format, $image, $link );
+
+}
+
+/**
+ * Show posts listing content depending from options
+ */
+function anyutv_blog_content() {
+
+	$blog_content = anyutv_get_option( 'blog_content', 'excerpt' );
+
+	if ( 'excerpt' == $blog_content ) {
+		the_excerpt();
+		return;
+	}
+
+	/* translators: %s: Name of current post */
+	the_content( sprintf(
+		wp_kses(
+			__( 'Continue reading %s <span class="meta-nav">&rarr;</span>', 'anyutv' ),
+			array( 'span' => array( 'class' => array() ) )
+		),
+		the_title( '<span class="screen-reader-text">"', '"</span>', false )
+	) );
+
+	wp_link_pages( array(
+		'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'anyutv' ),
+		'after'  => '</div>',
+	) );
+
+}
+
+/**
+ * Show post meta data
+ *
+ * @param string $page     page, meta called from
+ * @param string $position position, meta called from
+ * @param string $disable  disabled meta keys array
+ */
+function anyutv_post_meta( $page = 'loop', $position = 'header', $disable = array() ) {
+
+	$default_meta = array(
+		'author_avatar' => array(
+			'page'     => $page,
+			'position' => array( 'single' => 'header', 'loop' => 'footer' ),
+			'callback' => 'anyutv_post_author_avatar',
+			'priority' => 2,
+		),
+		'author' => array(
+			'page'     => $page,
+			'position' => array( 'single' => 'header', 'loop' => 'footer' ),
+			'callback' => 'anyutv_post_author',
+			'priority' => 2,
+		),
+		'date' => array(
+			'page'     => $page,
+			'position' => array( 'single' => 'header', 'loop' => 'footer' ),
+			'callback' => 'anyutv_post_date',
+			'priority' => 5,
+		),
+		'comments' => array(
+			'page'     => 'single',
+			'position' => 'header',
+			'callback' => 'anyutv_post_comments',
+			'priority' => 1,
+		),
+		'categories' => array(
+			'page'     => 'single',
+			'position' => 'footer',
+			'callback' => 'anyutv_post_categories',
+			'priority' => 1,
+		),
+		'tags' => array(
+			'page'     => 'single',
+			'position' => 'footer',
+			'callback' => 'anyutv_post_tags',
+			'priority' => 5,
+		)
+	);
+
+	/**
+	 * Get 3rd party meta items to show in meta block (or disable default from child theme)
+	 */
+	$meta_items = apply_filters( 'anyutv_meta_items_data', $default_meta, $page, $position );
+	$disable    = apply_filters( 'anyutv_disabled_meta', $disable );
+
+	foreach ( $meta_items as $meta_key => $data ) {
+
+		if ( is_array( $disable ) && in_array( $meta_key, $disable ) ) {
+			continue;
+		}
+		if ( empty( $data['page'] ) || $page != $data['page'] ) {
+			continue;
+		}
+
+		if ( empty( $data['position'] ) ) {
+			continue;
+		}
+
+		if ( ! is_array( $data['position'] ) ) {
+			$data['position'] = array(
+				'single' => $data['position'],
+				'loop'   => $data['position'],
+			);
+		}
+
+		if ( $position != $data['position'][ $page ] ) {
+			continue;
+		}
+
+		if ( empty( $data['callback'] ) || ! function_exists( $data['callback'] ) ) {
+			continue;
+		}
+
+		$priority = ( ! empty( $data['priority'] ) ) ? absint( $data['priority'] ) : 10;
+
+		add_action( 'anyutv_post_meta_' . $page . '_' . $position, $data['callback'], $priority );
+	}
+
+	do_action( 'anyutv_post_meta_' . $page . '_' . $position );
 
 }
 
@@ -334,28 +445,86 @@ function anyutv_read_more() {
 		return;
 	}
 
-	$text = anyutv_get_option( 'blog_more_text', __( 'Read', 'anyutv' ) );
+	$text = anyutv_get_option( 'blog_more_text', __( 'Read More', 'anyutv' ) );
 
-	printf( '<div class="etry-more-btn"><a href="%1$s" class="button">%2$s</a></div>', get_permalink(), esc_textarea( $text ) );
-
-}
-
-/**
- * Print options-related class to determine sidebar position
- */
-function anyutv_sidebar_class() {
-	$sidebar_position = anyutv_get_option( 'sidebar_position', 'right' );
-	printf( '%s-sidebar', esc_attr( $sidebar_position ) );
-}
-
-/**
- * Show 'to top' button HTML markup
- */
-function anyutv_to_top() {
-
-	echo apply_filters(
-		'anyutv_to_top_button',
-		'<div id="back-top" class="back-top-btn"><a href="#"><i class="fa fa-angle-up"></i></a></div>'
+	printf(
+		'<div class="entry-more-btn"><a href="%1$s" class="read-more">%2$s</a></div>',
+		esc_url( get_permalink() ),
+		esc_html( $text )
 	);
+
+}
+
+/**
+ * Custom posts navigation function
+ */
+function anyutv_posts_navigation( $args ) {
+
+	$format     = '<span class="nav-links-label">%s</span>';
+	$prev_label = sprintf( $format, __( 'Previos', 'anyutv' ) );
+	$next_label = sprintf( $format, __( 'Next', 'anyutv' ) );
+
+	$args = wp_parse_args( $args, array(
+		'prev_text'          => $prev_label . '<span class="nav-links-title">%title</span>',
+		'next_text'          => $next_label . '<span class="nav-links-title">%title</span>',
+		'screen_reader_text' => __( 'Post navigation', 'anyutv' ),
+	) );
+
+	$navigation = '';
+	$previous   = get_previous_post_link( '%link', $args['prev_text'] );
+	$next       = get_next_post_link( '%link', $args['next_text'] );
+
+	// Only add markup if there's somewhere to navigate to.
+	if ( ! $previous && ! $next ) {
+		return;
+	}
+
+	$navigation = _navigation_markup( $previous . $next, 'post-navigation', $args['screen_reader_text'] );
+
+	echo $navigation;
+}
+
+/**
+ * Show footer sidebars block
+ */
+function anyutv_footer_sidebars() {
+
+	$sidebars = array(
+		'footer-sidebar-1',
+		'footer-sidebar-2',
+		'footer-sidebar-3',
+		'footer-sidebar-4',
+	);
+
+	$active_sidebars = array();
+
+	foreach ( $sidebars as $sidebar ) {
+
+		if ( ! is_active_sidebar( $sidebar ) ) {
+			continue;
+		}
+
+		$active_sidebars[] = $sidebar;
+	}
+
+	if ( empty( $active_sidebars ) ) {
+		return;
+	}
+
+	$md_index = 12 / count( $active_sidebars );
+
+	echo '<div class="footer-sidebars">';
+	echo '<div class="container">';
+	echo '<div class="row">';
+
+	foreach ( $active_sidebars as $sidebar ) {
+		echo '<div class="col-md-' . $md_index . ' col-sm-12 col-xs-12">';
+		dynamic_sidebar( $sidebar );
+		echo '</div>';
+	}
+
+	echo '</div>';
+	echo '</div>';
+	echo '</div>';
 
 }

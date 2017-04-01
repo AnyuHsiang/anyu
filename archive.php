@@ -2,7 +2,7 @@
 /**
  * The template for displaying archive pages.
  *
- * Learn more: http://codex.wordpress.org/Template_Hierarchy
+ * @link https://codex.wordpress.org/Template_Hierarchy
  *
  * @package anyutv
  */
@@ -11,6 +11,7 @@ get_header(); ?>
 
 	<div class="row">
 		<main id="main" class="site-main col-md-8 col-sm-12 col-xs-12 <?php anyutv_sidebar_class(); ?>" role="main">
+
 		<?php if ( have_posts() ) : ?>
 
 			<header class="page-header">
@@ -35,14 +36,7 @@ get_header(); ?>
 
 			<?php endwhile; ?>
 
-			<?php 
-				the_posts_pagination( 
-					array( 
-						'prev_text' => '<i class="fa fa-angle-double-left"></i>',
-						'next_text' => '<i class="fa fa-angle-double-right"></i>'
-					)
-				); 
-			?>
+			<?php get_template_part( 'template-parts/content', 'pagination' ); ?>
 
 		<?php else : ?>
 
@@ -51,6 +45,9 @@ get_header(); ?>
 		<?php endif; ?>
 
 		</main><!-- #main -->
+
 		<?php get_sidebar(); ?>
+
 	</div>
+
 <?php get_footer(); ?>

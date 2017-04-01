@@ -1,11 +1,91 @@
 <?php
 /**
- * Custom functions that act independently of the theme templates
+ * Custom functions that act independently of the theme templates.
  *
- * Eventually, some of the functionality here could be replaced by core features
+ * Eventually, some of the functionality here could be replaced by core features.
  *
  * @package anyutv
  */
+
+/**
+ * Get necessary Google fonts URL
+ */
+function anyutv_fonts_url() {
+
+	$fonts_url = '';
+
+	$fonts = array();
+
+	/**
+	 * Translators: If there are characters in your language that are not
+	 * supported by Yesteryear, translate this to 'off'. Do not translate
+	 * into your own language.
+	 */
+	$fonts['Yesteryear:400'] = _x( 'on', 'Yesteryear font: on or off', 'anyutv' );
+
+	/**
+	 * Translators: If there are characters in your language that are not
+	 * supported by Roboto, translate this to 'off'. Do not translate
+	 * into your own language.
+	 */
+	$fonts['Roboto:300,400,700,400italic,700italic'] = _x( 'on', 'Roboto font: on or off', 'anyutv' );
+
+	/**
+	 * Translators: Set fonts subset for your language.
+	 */
+	$subset = _x( 'latin,latin-ext', 'Set subset for you language more info here - https://www.google.com/fonts/', 'anyutv' );
+
+	if ( false == strpos( $subset , 'latin' ) ) {
+		$subset = 'latin,' . $subset;
+	}
+
+	$font_families = array();
+
+	foreach ( $fonts as $font => $trigger ) {
+		if ( 'off' !== $trigger ) {
+			$font_families[] = $font;
+		}
+	}
+
+	if ( empty( $font_families ) ) {
+		return $fonts_url;
+	}
+
+	$query_args = array(
+		'family' => urlencode( implode( '|', $font_families ) ),
+		'subset' => urlencode( $subset ),
+	);
+
+	$fonts_url = add_query_arg( $query_args, '//fonts.googleapis.com/css' );
+
+	return $fonts_url;
+}
+
+/**
+ * Get theme option by name
+ *
+ * @param  string $name    option name
+ * @param  mixed  $default default option value
+ */
+function anyutv_get_option( $name, $default = false ) {
+
+	$all_options = get_theme_mod( 'anyutv' );
+
+	if ( is_array( $all_options ) && isset( $all_options[ $name ] ) ) {
+		return $all_options[ $name ];
+	}
+
+	return $default;
+
+}
+
+/**
+ * Print options-related class to determine sidebar position
+ */
+function anyutv_sidebar_class() {
+	$sidebar_position = anyutv_get_option( 'sidebar_position', 'right' );
+	printf( '%s-sidebar', esc_attr( $sidebar_position ) );
+}
 
 /**
  * Adds custom classes to the array of body classes.
@@ -23,50 +103,6 @@ function anyutv_body_classes( $classes ) {
 }
 add_filter( 'body_class', 'anyutv_body_classes' );
 
-
-/**
- * Get allowed socials data (to add options into customizer and output on front)
- */
-function anyutv_allowed_socials() {
-
-	return apply_filters(
-		'anyutv_allowed_socials',
-		array(
-			'phone' => array(
-				'label'   => __( 'phone', 'anyutv' ),
-				'icon'    => 'fa fa-phone',
-				'default' => 'tel:18995885887'
-			),
-			'github' => array(
-				'label'   => __( 'github', 'anyutv' ),
-				'icon'    => 'fa fa-github',
-				'default' => 'https://github.com/AnyuHsiang'
-			),
-			'weibo' => array(
-				'label'   => __( 'weibo', 'anyutv' ),
-				'icon'    => 'fa fa-weibo',
-				'default' => 'https://weibo.com/uaskme'
-			),
-			'qrcode' => array(
-				'label'   => __( 'qrcode', 'anyutv' ),
-				'icon'    => 'fa fa-qrcode',
-				'default' => ' https://anyu.tv/qrcode'
-			),
-			'website' => array(
-				'label'   => __( 'website', 'anyutv' ),
-				'icon'    => 'fa fa-link',
-				'default' => 'https://flytofilm.com'
-			),	
-			'mail' => array(
-				'label'   => __( 'mail', 'anyutv' ),
-				'icon'    => 'fa fa-envelope',
-				'default' => 'http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=07K9qqanpZOiov2wvL4'
-			)
-		)
-	);
-
-}
-
 /**
  * Custom comment output
  */
@@ -83,28 +119,28 @@ function anyutv_comment( $comment, $args, $depth ) {
 
 	<li id="comment-<?php comment_ID(); ?>" <?php comment_class( empty( $args['has_children'] ) ? '' : 'parent' ); ?>>
 		<article id="div-comment-<?php comment_ID(); ?>" class="comment-body">
-			<div class="comment-author-thumb">
-				<?php echo get_avatar( $comment, 50 ); ?>
-			</div><!-- .comment-author -->
+			<div class="comment-meta">
+				<?php
+					comment_reply_link(
+						array_merge( $args, array(
+							'add_below' => 'div-comment',
+							'depth'     => $depth,
+							'max_depth' => $args['max_depth'],
+							'before'    => '<div class="reply">',
+							'after'     => '</div>',
+						) ),
+						$comment
+					);
+				?>
+				<div class="comment-author-thumb">
+					<?php echo get_avatar( $comment, 40 ); ?>
+				</div><!-- .comment-author -->
+				<?php printf( '<div class="comment-author">%s</div>', get_comment_author_link() ); ?>
+				<time datetime="<?php comment_time( 'c' ); ?>">
+					<?php echo human_time_diff( get_comment_time('U'), current_time('timestamp') ) . ' ' . __( 'ago', 'anyutv' ); ?>
+				</time>
+			</div>
 			<div class="comment-content">
-				<div class="comment-meta">
-					<?php printf( '<div class="comment-author">%s</div>', get_comment_author_link() ); ?>
-					<time datetime="<?php comment_time( 'c' ); ?>">
-						<?php echo human_time_diff( get_comment_time('U'), current_time('timestamp') ) . ' ' . __( 'ago', 'anyutv' ); ?>
-					</time>
-					<?php
-						comment_reply_link( 
-							array_merge( $args, array(
-								'add_below' => 'div-comment',
-								'depth'     => $depth,
-								'max_depth' => $args['max_depth'],
-								'before'    => '<div class="reply">',
-								'after'     => '</div>',
-							) ),
-							$comment
-						);
-					?>
-				</div>
 				<?php if ( '0' == $comment->comment_approved ) : ?>
 				<p class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.', 'anyutv' ); ?></p>
 				<?php endif; ?>
@@ -115,4 +151,42 @@ function anyutv_comment( $comment, $args, $depth ) {
 	<?php
 	endif;
 
+}
+
+/**
+ * Get additional classes for posts loop
+ *
+ * @return array
+ */
+function anyutv_loop_classes() {
+
+	$is_enabled = anyutv_get_option( 'blog_loop_image', true );
+	$is_enabled = (bool) $is_enabled;
+
+	if ( has_post_thumbnail() && $is_enabled ) {
+		$thumb = 'has-thumb';
+	} else {
+		$thumb = 'no-thumb';
+	}
+
+	return array( 'is-loop', $thumb );
+}
+
+/**
+ * Get additional classes for single post
+ *
+ * @return array
+ */
+function anyutv_single_classes() {
+
+	$is_enabled = anyutv_get_option( 'blog_single_image', true );
+	$is_enabled = (bool) $is_enabled;
+
+	if ( has_post_thumbnail() && $is_enabled ) {
+		$thumb = 'has-thumb';
+	} else {
+		$thumb = 'no-thumb';
+	}
+
+	return array( 'is-single', $thumb );
 }

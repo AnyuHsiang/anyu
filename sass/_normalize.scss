@@ -1,6 +1,5 @@
 html {
 	font-family: sans-serif;
-	font-size: 13px;
 	-webkit-text-size-adjust: 100%;
 	-ms-text-size-adjust:     100%;
 }
@@ -62,6 +61,11 @@ strong {
 
 dfn {
 	font-style: italic;
+}
+
+h1 {
+	font-size: 2em;
+	margin: 0.67em 0;
 }
 
 mark {

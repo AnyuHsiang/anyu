@@ -1,15 +1,15 @@
 <?php
 /**
- * The template part for displaying a message that posts cannot be found.
+ * Template part for displaying a message that posts cannot be found.
  *
- * Learn more: http://codex.wordpress.org/Template_Hierarchy
+ * @link https://codex.wordpress.org/Template_Hierarchy
  *
  * @package anyutv
  */
 
 ?>
 
-<section class="no-results not-found">
+<section class="no-results not-found hentry">
 	<header class="page-header">
 		<h1 class="page-title"><?php esc_html_e( 'Nothing Found', 'anyutv' ); ?></h1>
 	</header><!-- .page-header -->

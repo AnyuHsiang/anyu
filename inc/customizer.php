@@ -1,6 +1,6 @@
 <?php
 /**
- * anyutv Theme Customizer
+ * anyutv Theme Customizer.
  *
  * @package anyutv
  */
@@ -26,7 +26,7 @@ function anyutv_customize_preview_js() {
 add_action( 'customize_preview_init', 'anyutv_customize_preview_js' );
 
 /**
- * Adds Azeria-related customizer elements
+ * Adds theme-related customizer elements
  *
  * WordPress 3.4 Required
  */
@@ -35,54 +35,6 @@ add_action( 'customize_register', 'anyutv_add_customizer' );
 if( ! function_exists( 'anyutv_add_customizer' ) ) {
 
 	function anyutv_add_customizer( $wp_customize ) {
-
-		/* General section
-		---------------------------------------------------------*/
-		$wp_customize->add_section( 'anyutv_general' , array(
-			'title'      => __('General','anyutv'),
-			'priority'   => 35,
-		) );
-
-		/* Sticky menu */
-		$wp_customize->add_setting( 'anyutv[sticky_menu]', array(
-				'default'           => 'static',
-				'type'              => 'theme_mod',
-				'sanitize_callback' => 'anyutv_sanitize_select'
-		) );
-		$wp_customize->add_control( 'anyutv_sticky_menu', array(
-				'label'    => __( 'Menu type', 'anyutv' ),
-				'section'  => 'anyutv_general',
-				'settings' => 'anyutv[sticky_menu]',
-				'type'     => 'select',
-				'priority' => 2,
-				'choices'  => array(
-						'static' => __( 'Static menu', 'anyutv' ),
-						'sticky' => __( 'Sticky menu', 'anyutv' )
-					)
-		) );
-
-		/* Header Logo section
-		---------------------------------------------------------*/
-		$wp_customize->add_section( 'anyutv_header_logo' , array(
-			'title'      => __('Header Logo','anyutv'),
-			'priority'   => 40,
-		) );
-
-		/* Logo image */
-		$wp_customize->add_setting( 'anyutv[logo_img]', array(
-				'default'           => '',
-				'type'              => 'theme_mod',
-				'sanitize_callback' => 'anyutv_sanitize_image'
-		) );
-
-		$wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'anyutv_logo_img', array(
-			'label'    => __( 'Logo Image', 'anyutv' ),
-			'section'  => 'anyutv_header_logo',
-			'settings' => 'anyutv[logo_img]',
-			'priority' => 1
-		) ) );
-
-
 
 		/* Slider section
 		----------------------------------------------------*/
@@ -236,7 +188,7 @@ if( ! function_exists( 'anyutv_add_customizer' ) ) {
 
 		/* Animation type */
 		$wp_customize->add_setting( 'anyutv[slider_animation]', array(
-				'default'           => 'slide',
+				'default'           => 'fade',
 				'type'              => 'theme_mod',
 				'sanitize_callback' => 'anyutv_sanitize_select'
 		) );
@@ -247,8 +199,8 @@ if( ! function_exists( 'anyutv_add_customizer' ) ) {
 				'type'     => 'select',
 				'priority' => 9,
 				'choices'  => array(
+					'fade'  => __( 'Fade', 'anyutv' ),
 					'slide' => __( 'Slide', 'anyutv' ),
-					'fade'  => __( 'Fade', 'anyutv' )
 				)
 		) );
 
@@ -362,7 +314,7 @@ if( ! function_exists( 'anyutv_add_customizer' ) ) {
 		$wp_customize->add_setting( 'anyutv[footer_copyright]', array(
 				'default'           => '',
 				'type'              => 'theme_mod',
-				'sanitize_callback' => 'esc_textarea'
+				'sanitize_callback' => 'wp_filter_post_kses'
 		) );
 		$wp_customize->add_control( 'anyutv_footer_copyright', array(
 				'label'       => __( 'Set custom copyright text', 'anyutv' ),
@@ -393,20 +345,6 @@ if( ! function_exists( 'anyutv_add_customizer' ) ) {
 				'priority' => 1
 		) );
 
-		/* About title */
-		$wp_customize->add_setting( 'anyutv[about_title]', array(
-				'default'           => __( 'About Me', 'anyutv' ),
-				'type'              => 'theme_mod',
-				'sanitize_callback' => 'sanitize_text_field'
-		) );
-		$wp_customize->add_control( 'anyutv_about_title', array(
-				'label'       => __( 'Enter sidebar about box title', 'anyutv' ),
-				'section'     => 'anyutv_about',
-				'settings'    => 'anyutv[about_title]',
-				'type'        => 'text',
-				'priority'    => 2
-		) );
-
 		/* About image */
 		$wp_customize->add_setting( 'anyutv[about_img]', array(
 				'default'           => '',
@@ -425,7 +363,7 @@ if( ! function_exists( 'anyutv_add_customizer' ) ) {
 		$wp_customize->add_setting( 'anyutv[about_message]', array(
 				'default'           => __( 'Hello! And welcome to my personal website!', 'anyutv' ),
 				'type'              => 'theme_mod',
-				'sanitize_callback' => 'esc_textarea'
+				'sanitize_callback' => 'wp_filter_post_kses'
 		) );
 		$wp_customize->add_control( 'anyutv_about_message', array(
 				'label'       => __( 'Set about box message text', 'anyutv' ),
@@ -438,11 +376,10 @@ if( ! function_exists( 'anyutv_add_customizer' ) ) {
 		/* Follow section
 		----------------------------------------------------*/
 		$wp_customize->add_section( 'anyutv_follow' , array(
-			'title'      => __('Follow box','anyutv'),
+			'title'      => __('Follow box in header','anyutv'),
 			'priority'   => 82,
 		) );
 
-		/* Enable follow */
 		$wp_customize->add_setting( 'anyutv[follow_enabled]', array(
 				'default'           => '1',
 				'type'              => 'theme_mod',
@@ -455,46 +392,6 @@ if( ! function_exists( 'anyutv_add_customizer' ) ) {
 				'type'     => 'checkbox',
 				'priority' => 1
 		) );
-
-		/* Follow title */
-		$wp_customize->add_setting( 'anyutv[follow_title]', array(
-				'default'           => __( 'Follow Me', 'anyutv' ),
-				'type'              => 'theme_mod',
-				'sanitize_callback' => 'sanitize_text_field'
-		) );
-		$wp_customize->add_control( 'anyutv_follow_title', array(
-				'label'       => __( 'Enter follow about box title', 'anyutv' ),
-				'section'     => 'anyutv_follow',
-				'settings'    => 'anyutv[follow_title]',
-				'type'        => 'text',
-				'priority'    => 2
-		) );
-
-		/* Social links */
-		$socials = anyutv_allowed_socials();
-
-		// prevent error from wrong filters applied
-		if ( is_array( $socials ) ) {
-			// add allowed nets to customizer
-			foreach ( $socials as $net => $data ) {
-
-				$data = wp_parse_args( $data, array( 'label' => '', 'icon' => '', 'default' => '' ) );
-
-				$wp_customize->add_setting( 'anyutv[follow_' . $net . ']', array(
-						'default'           => $data['default'],
-						'type'              => 'theme_mod',
-						'sanitize_callback' => 'anyutv_sanitize_url'
-				) );
-				$wp_customize->add_control( 'anyutv_follow_' . $net, array(
-						'label'       => sprintf( __( 'Link to %s account:', 'anyutv' ), $data['label'] ),
-						'section'     => 'anyutv_follow',
-						'settings'    => 'anyutv[follow_' . $net . ']',
-						'type'        => 'text',
-						'priority'    => 3
-				) );
-
-			}
-		}
 
 	}
 
@@ -520,18 +417,18 @@ function anyutv_sanitize_image( $image, $setting ) {
 	 *
 	 * The array includes image mime types that are included in wp_get_mime_types()
 	 */
-    $mimes = array(
-        'jpg|jpeg|jpe' => 'image/jpeg',
-        'gif'          => 'image/gif',
-        'png'          => 'image/png',
-        'bmp'          => 'image/bmp',
-        'tif|tiff'     => 'image/tiff',
-        'ico'          => 'image/x-icon'
-    );
+	$mimes = array(
+		'jpg|jpeg|jpe' => 'image/jpeg',
+		'gif'          => 'image/gif',
+		'png'          => 'image/png',
+		'bmp'          => 'image/bmp',
+		'tif|tiff'     => 'image/tiff',
+		'ico'          => 'image/x-icon'
+	);
 	// Return an array with file extension and mime_type.
-    $file = wp_check_filetype( $image, $mimes );
+	$file = wp_check_filetype( $image, $mimes );
 	// If $image has a valid mime_type, return it; otherwise, return the default.
-    return ( $file['ext'] ? $image : $setting->default );
+	return ( $file['ext'] ? $image : $setting->default );
 }
 
 /**

@@ -1,27 +1,33 @@
 .wp-caption {
-	margin-bottom: 30px;
+	margin-bottom: 24px;
 	max-width: 100%;
+	&:after {
+		clear: both;
+		content: "";
+		width: 100%;
+		display: block;
+	}
+
+	img {
+		display: block;
+	}
 
 	img[class*="wp-image-"] {
 		@include center-block;
+		float: left;
 	}
 
 	.wp-caption-text {
-		padding: 5px 10px;
-		background: $color__link-hover;
+		background: $color__secondary;
 		color: #fff;
-		a {
-			color: #fff;
-			&:hover,
-			&:active,
-			&:focus,
-			&:visited {
-				color: #fff;
-			}
-		}
+		padding: 10px 0;
+		margin: 0;
+		@include font-size(.75);
+		clear: both;
 	}
 }
 
 .wp-caption-text {
 	text-align: center;
 }
+

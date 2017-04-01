@@ -9,7 +9,7 @@
  *
  * @link https://codex.wordpress.org/Template_Hierarchy
  *
- * @package anyutv
+ * @package anyutv 向安宇注释
  */
 
 get_header(); ?>
@@ -17,7 +17,7 @@ get_header(); ?>
 	<div class="row">
 		<main id="main" class="site-main col-md-8 col-sm-12 col-xs-12 <?php anyutv_sidebar_class(); ?>" role="main">
 
-		<?php if ( have_posts() ) : ?>
+		<?php if ( have_posts() ) : ?><!-- #判断是否有文章 -->
 
 			<?php if ( is_home() && ! is_front_page() ) : ?>
 				<header>
@@ -25,8 +25,8 @@ get_header(); ?>
 				</header>
 			<?php endif; ?>
 
-			<?php /* Start the Loop */ ?>
-			<?php while ( have_posts() ) : the_post(); ?>
+			<?php /* Start the Loop开始循环 */ ?>
+			<?php while ( have_posts() ) : the_post(); ?><!-- #the_post获取下一篇文章信息，并将信息存入全局变量 -->
 
 				<?php
 
@@ -42,7 +42,7 @@ get_header(); ?>
 
 			<?php get_template_part( 'template-parts/content', 'pagination' ); ?>
 
-		<?php else : ?>
+		<?php else : ?><!-- #如果没有文章就执行下面代码 -->
 
 			<?php get_template_part( 'template-parts/content', 'none' ); ?>
 
@@ -54,4 +54,4 @@ get_header(); ?>
 
 	</div>
 
-<?php get_footer(); ?>
+<?php get_footer(); ?><!-- #动作钩子 -->

@@ -26,13 +26,12 @@
 				<div class="footer-logo">
 					<a class="footer-logo-link" href="<?php echo home_url( '/' ); ?>"><?php bloginfo( 'name' ); ?></a>
 				</div>
-				<a rel="nofollow" href="<?php echo esc_url( __( 'http://wordpress.org/', 'anyutv' ) ); ?>"><?php printf( esc_html__( 'Proudly powered by %s', 'anyutv' ), 'WordPress' ); ?></a>
 				<br>
 				<?php
 					printf(
-						__( '%1$s WordPress Theme, &copy; 2016 <a href="%2$s" rel="nofollow">Tefox</a>.', 'anyutv' ),
-						'Renard',
-						'http://www.tefox.net/'
+						__( '%1$s Theme, &copy; 2016 <a href="%2$s" rel="nofollow">向安宇</a>.', 'anyutv' ),
+						'Anyutv',
+						'https://anyu.tv/'
 					);
 				?>
 			<?php } ?>
@@ -40,6 +39,15 @@
 		</div><!-- .site-info -->
 	</footer><!-- #colophon -->
 </div><!-- #page -->
+
+<!-- #折叠收缩js -->
+<script type="text/javascript">  
+    jQuery(document).ready(function(jQuery) {  
+        jQuery('.collapseButton').click(function() {  
+            jQuery(this).parent().parent().find('.xContent').slideToggle('slow');  
+        });  
+    });  
+</script>  
 
 <?php wp_footer(); ?>
 

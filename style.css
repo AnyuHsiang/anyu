@@ -1121,6 +1121,7 @@ button {
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2); }
 
 .site-branding {
+	text-align: center;
   background: #333742; }
 
 .site-logo-wrap {
@@ -1128,7 +1129,7 @@ button {
   vertical-align: top;
   padding: 10px 20px;
   text-align: center;
-  background: rgba(0, 0, 0, 0.5); }
+  background: transparent; }
   @media (max-width: 480px) {
     .site-logo-wrap {
       display: block;
@@ -1154,173 +1155,7 @@ button {
 .site-nav {
   background: #fff; }
 
-.follow-list-wrap {
-  text-align: right;
-  font-size: 0;
-  line-height: 0;
-  padding: 22px 0 0 0; }
-  @media (max-width: 480px) {
-    .follow-list-wrap {
-      padding: 10px 0;
-      text-align: center; } }
-  .follow-list-wrap a.set-menu_link {
-    font-size: 16px;
-    font-size: 1rem;
-    line-height: 1; }
-.follow-list-items {
-  margin: 0;
-  padding: 0; }
-  .follow-list-items .menu-item {
-    display: inline-block;
-    margin: 0 0 0 10px; }
-    @media (max-width: 767px) {
-      .follow-list-items .menu-item {
-        margin: 0 0 0 3px; } }
-    .follow-list-items .menu-item a {
-      display: block;
-      width: 40px;
-      height: 40px;
-      text-align: center;
-      border-radius: 20px;
-      color: rgba(255, 255, 255, 0.5);
-      background: rgba(0, 0, 0, 0.3);
-      text-decoration: none;
-      position: relative; }
-      @media (max-width: 599px) {
-        .follow-list-items .menu-item a {
-          width: 30px;
-          height: 30px;
-          line-height: 30px;
-          font-size: 14px;
-          text-align: center;
-          border-radius: 20px; } }
-      .follow-list-items .menu-item a:after {
-        -webkit-transition: none;
-                transition: none;
-        content: "";
-        box-shadow: 0 0 0 white;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        position: absolute;
-        border-radius: 20px;
-        visibility: hidden; }
-      .follow-list-items .menu-item a:hover:after {
-        -webkit-transition: all 200ms linear;
-                transition: all 200ms linear;
-        box-shadow: 0 0 40px rgba(255, 255, 255, 0);
-        visibility: visible; }
-      .follow-list-items .menu-item a:hover, .follow-list-items .menu-item a:focus, .follow-list-items .menu-item a:active, .follow-list-items .menu-item a:visited {
-        color: white; }
-      .follow-list-items .menu-item a[href*="codepen.io"]::before {
-        content: '\f1cb'; }
-      .follow-list-items .menu-item a[href*="digg.com"]::before {
-        content: '\f1a6'; }
-      .follow-list-items .menu-item a[href*="dribbble.com"]::before {
-        content: '\f17d'; }
-      .follow-list-items .menu-item a[href*="dropbox.com"]::before {
-        content: '\f16b'; }
-      .follow-list-items .menu-item a[href*="facebook.com"]::before {
-        content: '\f09a'; }
-      .follow-list-items .menu-item a[href*="flickr.com"]::before {
-        content: '\f16e'; }
-      .follow-list-items .menu-item a[href*="plus.google.com"]::before {
-        content: '\f0d5'; }
-      .follow-list-items .menu-item a[href*="github.com"]::before {
-        content: '\f09b'; }
-      .follow-list-items .menu-item a[href*="instagram.com"]::before {
-        content: '\f16d'; }
-      .follow-list-items .menu-item a[href*="linkedin.com"]::before {
-        content: '\f0e1'; }
-      .follow-list-items .menu-item a[href*="pinterest.com"]::before {
-        content: '\f0d2'; }
-      .follow-list-items .menu-item a[href*="getpocket.com"]::before {
-        content: '\f265'; }
-      .follow-list-items .menu-item a[href*="reddit.com"]::before {
-        content: '\f1a1'; }
-      .follow-list-items .menu-item a[href*="skype.com"]::before, .follow-list-items .menu-item a[href*="skype:"]::before {
-        content: '\f17e'; }
-      .follow-list-items .menu-item a[href*="stumbleupon.com"]::before {
-        content: '\f1a4'; }
-      .follow-list-items .menu-item a[href*="tumblr.com"]::before {
-        content: '\f173'; }
-      .follow-list-items .menu-item a[href*="twitter.com"]::before {
-        content: '\f099'; }
-      .follow-list-items .menu-item a[href*="vimeo.com"]::before {
-        content: '\f27d'; }
-      .follow-list-items .menu-item a[href*="wordpress.org"]::before, .follow-list-items .menu-item a[href*="wordpress.com"]::before {
-        content: '\f19a'; }
-      .follow-list-items .menu-item a[href*="youtube.com"]::before {
-        content: '\f167'; }
-      .follow-list-items .menu-item a[href*="amazon.com"]::before {
-        content: '\f270'; }
-      .follow-list-items .menu-item a[href*="tripadvisor"]::before {
-        content: '\f262'; }
-      .follow-list-items .menu-item a[href*="ycombinator.com"]::before {
-        content: '\f23b'; }
-      .follow-list-items .menu-item a[href*="xing.com"]::before {
-        content: '\f168'; }
-      .follow-list-items .menu-item a[href*="yahoo."]::before {
-        content: '\f19e'; }
-      .follow-list-items .menu-item a[href*="vine.co"]::before {
-        content: '\f1ca'; }
-      .follow-list-items .menu-item a[href*="weibo.com"]::before {
-        content: '\f18a'; }
-      .follow-list-items .menu-item a[href*="trello.com"]::before {
-        content: '\f181'; }
-      .follow-list-items .menu-item a[href*="steampowered.com"]::before {
-        content: '\f1b6'; }
-      .follow-list-items .menu-item a[href*="soundcloud.com"]::before {
-        content: '\f1be'; }
-      .follow-list-items .menu-item a[href*="spotify.com"]::before {
-        content: '\f1bc'; }
-      .follow-list-items .menu-item a[href*="stackexchange.com"]::before {
-        content: '\f18d'; }
-      .follow-list-items .menu-item a[href*="stackoverflow.com"]::before {
-        content: '\f16c'; }
-      .follow-list-items .menu-item a[href*="slideshare.net"]::before {
-        content: '\f1e7'; }
-      .follow-list-items .menu-item a[href*="slack.com"]::before {
-        content: '\f198'; }
-      .follow-list-items .menu-item a[href*="skyatlas.com"]::before {
-        content: '\f216'; }
-      .follow-list-items .menu-item a[href*="last.fm"]::before {
-        content: '\f202'; }
-      .follow-list-items .menu-item a[href*="jsfiddle.net"]::before {
-        content: '\f1cc'; }
-      .follow-list-items .menu-item a[href*="behance.net"]::before {
-        content: '\f1b4'; }
-      .follow-list-items .menu-item a[href*="bitbucket.org"]::before {
-        content: '\f171'; }
-      .follow-list-items .menu-item a[href*="codepen.io"]::before {
-        content: '\f1cb'; }
-      .follow-list-items .menu-item a[href*="codiepie.com"]::before {
-        content: '\f284'; }
-      .follow-list-items .menu-item a[href*="connectdevelop.com"]::before {
-        content: '\f20e'; }
-      .follow-list-items .menu-item a[href*="dashcube.com"]::before {
-        content: '\f210'; }
-      .follow-list-items .menu-item a[href*="contao.org"]::before {
-        content: '\f26d'; }
-      .follow-list-items .menu-item a[href*="delicious.com"]::before {
-        content: '\f1a5'; }
-      .follow-list-items .menu-item a[href*="deviantart.com"]::before {
-        content: '\f1bd'; }
-      .follow-list-items .menu-item a[href*="vk.com"]::before {
-        content: '\f189'; }
-      .follow-list-items .menu-item a::before {
-        font-family: FontAwesome;
-        line-height: 40px;
-        font-size: 18px;
-        position: absolute;
-        left: 0;
-        top: 0;
-        display: block;
-        width: 40px;
-        height: 40px;
-        margin: auto;
-        border-radius: 50%; }
+
 
 /*--------------------------------------------------------------
 ## Posts and pages

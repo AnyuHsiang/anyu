@@ -106,7 +106,7 @@ function anyutv_post_comments() {
 	}
 
 	echo '<span class="entry-meta-item comments">';
-	comments_popup_link( esc_html__( '留个言呗', 'anyutv' ), esc_html__( '1 评论', 'anyutv' ), esc_html__( '% 评论', 'anyutv' ) );
+	comments_popup_link( esc_html__( 'Leave a comment', 'anyutv' ), esc_html__( '1 comment', 'anyutv' ), esc_html__( '% comment', 'anyutv' ) );
 	echo '</span>';
 
 }

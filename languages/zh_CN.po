@@ -2,34 +2,34 @@
 # This file is distributed under the GNU General Public License v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Renard\n"
+"Project-Id-Version: anyutv\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tags/_s\n"
-"POT-Creation-Date: 2016-06-26 17:16+0200\n"
-"PO-Revision-Date: 2016-06-26 17:16+0200\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2017-04-03 20:32+0800\n"
+"PO-Revision-Date: 2017-04-04 01:46+0800\n"
 "Language-Team: \n"
-"Language: en_EN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.6\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-Basepath: ../\n"
+"X-Generator: Poedit 1.8.4\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_x;esc_attr_e;_n;esc_html_e;esc_html__;"
 "esc_attr__\n"
+"Last-Translator: \n"
+"Language: zh_CN\n"
 "X-Poedit-SearchPath-0: .\n"
 
 # @ _s
 #: 404.php:18
 msgid "Oops! That page can&rsquo;t be found."
-msgstr ""
+msgstr "找不到该页面。"
 
 # @ _s
 #: 404.php:22
 msgid ""
 "It looks like nothing was found at this location. Maybe try one of the links "
 "below or a search?"
-msgstr ""
+msgstr "没有找到相应内容，要不试试别的链接或者搜索？"
 
 # @ _s
 #: comments.php:40 comments.php:62
@@ -39,21 +39,21 @@ msgstr ""
 # @ _s
 #: comments.php:43 comments.php:65
 msgid "Older Comments"
-msgstr ""
+msgstr "以前的评论"
 
 # @ _s
 #: comments.php:44 comments.php:66
 msgid "Newer Comments"
-msgstr ""
+msgstr "最新评论"
 
 # @ _s
 #: comments.php:78
 msgid "Comments are closed."
-msgstr ""
+msgstr "评论已关闭"
 
 #: comments.php:82
 msgid "Comment*"
-msgstr ""
+msgstr "评论*"
 
 #: footer.php:29
 msgid "http://wordpress.org/"
@@ -73,7 +73,7 @@ msgstr ""
 # @ _s
 #: functions.php:50 functions.php:88 header.php:49
 msgid "Primary Menu"
-msgstr ""
+msgstr "导航"
 
 #: functions.php:89
 msgid "Social Menu"
@@ -82,23 +82,23 @@ msgstr ""
 # @ _s
 #: functions.php:115
 msgid "Sidebar"
-msgstr ""
+msgstr "侧边栏"
 
 #: functions.php:125
 msgid "Footer Sidebar 1"
-msgstr ""
+msgstr "页脚小工具-1"
 
 #: functions.php:135
 msgid "Footer Sidebar 2"
-msgstr ""
+msgstr "页脚小工具-2"
 
 #: functions.php:145
 msgid "Footer Sidebar 3"
-msgstr ""
+msgstr "页脚小工具-3"
 
 #: functions.php:154
 msgid "Footer Sidebar 4"
-msgstr ""
+msgstr "页脚小工具-4"
 
 # @ _s
 #: header.php:25
@@ -107,7 +107,7 @@ msgstr ""
 
 #: inc/customizer.php:42
 msgid "Slider"
-msgstr ""
+msgstr "幻灯片"
 
 #: inc/customizer.php:53
 msgid "Enable/disable slider"
@@ -119,7 +119,7 @@ msgstr ""
 
 #: inc/customizer.php:73
 msgid "Only on Front page"
-msgstr ""
+msgstr "仅显示在首页上"
 
 #: inc/customizer.php:74
 msgid "On all pages"
@@ -300,17 +300,17 @@ msgstr ""
 # @ _s
 #: inc/template-tags.php:109 inc/template-tags.php:198
 msgid "Leave a comment"
-msgstr ""
+msgstr "发表评论"
 
 # @ _s
 #: inc/template-tags.php:109 inc/template-tags.php:198
 msgid "1 Comment"
-msgstr ""
+msgstr "1 则评论"
 
 # @ _s
 #: inc/template-tags.php:109 inc/template-tags.php:198
 msgid "% Comments"
-msgstr ""
+msgstr "% 则评论"
 
 # @ _s
 #. translators: used between list items, there is a space after the comma
@@ -349,15 +349,15 @@ msgstr ""
 
 #: inc/template-tags.php:491
 msgid "Read More"
-msgstr ""
+msgstr "阅读更多"
 
 #: inc/template-tags.php:503
 msgid "Previos"
-msgstr ""
+msgstr "上一页"
 
 #: inc/template-tags.php:504
 msgid "Next"
-msgstr ""
+msgstr "下一页"
 
 #: inc/template-tags.php:509
 msgid "Post navigation"
